@@ -1,4 +1,4 @@
-$configPath = "C:\Users\Mark\Downloads"
+$configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config"
 $computerNames = "MARK-VM"
 
 [DSCLocalConfigurationManager()]

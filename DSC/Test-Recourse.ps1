@@ -1,7 +1,8 @@
-$configPath = "C:\Users\Mark\Downloads"
+$configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config"
 $computerNames = "MARK-VM"
 
 #Get-DscResource
+#Get-DscResource -Name WindowsFeature
 #Get-DscResource -Name WindowsFeature -Syntax
 
 Configuration InstallWebServer {
