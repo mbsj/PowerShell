@@ -10,12 +10,12 @@ Configuration InstallWebServer {
     Node $computerNames {
         WindowsFeature IISWebServer {
             Name = "web-server"
-            Ensure = "Absent"
+            Ensure = "Present"
         }
 
         WindowsFeature IISManager {
             Name = "web-mgmt-tools"
-            Ensure = "Absent"
+            Ensure = "Present"
         }
     }
 }
@@ -23,3 +23,7 @@ Configuration InstallWebServer {
 InstallWebServer -OutputPath $configPath
 
 Start-DscConfiguration -ComputerName $computerNames -Path $configPath -Wait -Verbose
+
+Test-DscConfiguration -ComputerName $computerNames
+
+Get-DscConfiguration -CimSession $computerNames
