@@ -1,6 +1,8 @@
 $configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\MOF"
 $computerNames = "MARK-VM"
 
+#Add-WindowsFeature -Name "DSC-Service"
+
 [DSCLocalConfigurationManager()]
 Configuration TestConfig {
     Node $computerNames {
