@@ -1,4 +1,4 @@
-$configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config"
+$configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\MOF"
 $computerNames = "MARK-VM"
 
 [DSCLocalConfigurationManager()]
