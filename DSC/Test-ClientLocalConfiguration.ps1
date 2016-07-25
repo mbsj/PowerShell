@@ -4,7 +4,7 @@ $computerNames = "MARK-VM"
 #Add-WindowsFeature -Name "DSC-Service"
 
 [DSCLocalConfigurationManager()]
-Configuration TestConfig {
+Configuration PushConfig {
     Node $computerNames {
         Settings {
             AllowModuleOverwrite = $true
@@ -14,7 +14,7 @@ Configuration TestConfig {
     }
 }
 
-TestConfig -OutputPath $configPath
+PushConfig -OutputPath $configPath
 
 Set-DscLocalConfigurationManager -ComputerName $computerNames -Path $configPath -Verbose
 
