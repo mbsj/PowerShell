@@ -10,6 +10,7 @@ Configuration PushConfig {
             AllowModuleOverwrite = $true
             ConfigurationMode = 'ApplyAndAutoCorrect'
             RefreshMode = 'Push'
+            RebootNodeIfNeeded = $false # True for "true" clients
         } 
     }
 }

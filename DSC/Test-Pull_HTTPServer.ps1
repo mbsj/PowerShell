@@ -43,4 +43,4 @@ Configuration HTTPPullServer {
 
 HTTPPullServer -OutputPath $configPath
 
-Start-DscConfiguration -Path $configPath -ComputerName $computerNames -Verbose -Wait
+Start-DscConfiguration -Path $configPath -ComputerName $computerNames -Verbose -Wait -Force # Force to allow PUSH operation in PULL mode

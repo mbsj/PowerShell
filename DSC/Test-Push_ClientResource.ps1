@@ -5,23 +5,18 @@ $computerNames = "MARK-VM"
 #Get-DscResource -Name WindowsFeature
 #Get-DscResource -Name WindowsFeature -Syntax
 
-Configuration InstallWebServer {
+Configuration TelnetClientInstalled {
     Import-DscResource -ModuleName "PSDesiredStateConfiguration"
 
     Node $computerNames {
-        WindowsFeature IISWebServer {
-            Name = "web-server"
-            Ensure = "Present"
-        }
-
-        WindowsFeature IISManager {
-            Name = "web-mgmt-tools"
+        WindowsFeature TelnetClient {
+            Name = "Telnet-Client"
             Ensure = "Present"
         }
     }
 }
 
-InstallWebServer -OutputPath $configPath
+TelnetClientInstalled -OutputPath $configPath
 
 Start-DscConfiguration -ComputerName $computerNames -Path $configPath -Wait -Verbose
 
