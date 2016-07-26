@@ -1,13 +1,13 @@
-$pullLocalPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\PullServer\PullWeb"
-$dscModulePath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\PullServer\Modules"
-$dscConfigurationPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\PullServer\Configs"
+$pullLocalPath = "C:\DSC\Config\PullServer\PullWeb" # On pull server
+$dscModulePath = "C:\DSC\Config\PullServer\Modules" # On pull server
+$dscConfigurationPath = "C:\DSC\Config\PullServer\Configs" # On pull server
 $configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\MOF"
-$computerNames = "MARK-VM"
+
+$computerNames = "DSC-SERVER"
+$credentials = New-Object System.Management.Automation.PSCredential ("Administrator", (ConvertTo-SecureString "9VBatteryEel" -AsPlainText -Force))
 
 #Install-Module -Name xPSDesiredStateConfiguration
 #Get-DscResource -Name xDSCWebService -Syntax
-
-# TODO: report (compliance) server
 
 #Destination server must have all DscResource modules (xPSDesiredStateConfiguration)
 
@@ -19,12 +19,6 @@ Configuration HTTPPullServer {
         WindowsFeature DSCWebService {
             Name = "DSC-Service"
             Ensure = "Present"
-        }
-
-        WindowsFeature IISManager {
-            Name = "web-mgmt-tools"
-            Ensure = "Present"
-            DependsOn = "[WindowsFeature]DSCWebService"
         }
 
         xDSCWebService DSCPullServer {
@@ -43,4 +37,4 @@ Configuration HTTPPullServer {
 
 HTTPPullServer -OutputPath $configPath
 
-Start-DscConfiguration -Path $configPath -ComputerName $computerNames -Verbose -Wait -Force # Force to allow PUSH operation in PULL mode
+Start-DscConfiguration -Credential $credentials -Path $configPath -ComputerName $computerNames -Verbose -Wait -Force #-Force to allow PUSH operation in PULL mode

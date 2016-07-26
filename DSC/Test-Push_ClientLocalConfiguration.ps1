@@ -1,5 +1,5 @@
 $configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\MOF"
-$computerNames = "MARK-VM"
+$computerNames = "DSC-CLIENT"
 
 #Add-WindowsFeature -Name "DSC-Service"
 
@@ -10,7 +10,7 @@ Configuration PushConfig {
             AllowModuleOverwrite = $true
             ConfigurationMode = 'ApplyAndAutoCorrect'
             RefreshMode = 'Push'
-            RebootNodeIfNeeded = $false # True for "true" clients
+            RebootNodeIfNeeded = $true
         } 
     }
 }

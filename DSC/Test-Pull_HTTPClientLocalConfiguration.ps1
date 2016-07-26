@@ -1,9 +1,11 @@
-$httpPullUri = "http://mark-vm:8080/PSDSCPullServer.svc" # Web service created using xPSDesiredStateConfiguration
+$httpPullUri = "http://DSC-SERVER:8080/PSDSCPullServer.svc" # Web service created using xPSDesiredStateConfiguration
 $configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\MOF"
-$computerNames = "MARK-VM"
+
+$computerNames = "DSC-CLIENT"
+$credentials = New-Object System.Management.Automation.PSCredential ("Administrator", (ConvertTo-SecureString "9VBatteryEel" -AsPlainText -Force))
 
 [DSCLocalConfigurationManager()]
-Configuration PullSMBConfig {
+Configuration PullHTTPConfig {
     param (
         [Parameter(Mandatory=$true)]
         [String[]]$ComputerName,
@@ -17,8 +19,9 @@ Configuration PullSMBConfig {
             AllowModuleOverwrite = $true
             ConfigurationMode = 'ApplyAndAutoCorrect'
             RefreshMode = 'Pull'
-            RebootNodeIfNeeded = $false # True for "true" clients
+            RebootNodeIfNeeded = $true
             ConfigurationID = $GUID
+            RefreshFrequencyMins = 30
         } 
 
         ConfigurationRepositoryWeb HTTPPull {
@@ -29,8 +32,10 @@ Configuration PullSMBConfig {
 }
 
 # GUID = New-Guid - Paired with config
-PullSMBConfig -ComputerName $computerNames -GUID "ef4e3f76-6da5-4c0e-8a6c-7978ac85acc5" -OutputPath $configPath
+PullHTTPConfig -ComputerName $computerNames -GUID "ef4e3f76-6da5-4c0e-8a6c-7978ac85acc5" -OutputPath $configPath
 
-Set-DscLocalConfigurationManager -ComputerName $computerNames -Path $configPath -Verbose
+$session = New-CimSession -ComputerName $computerNames -Credential $credentials
 
-Get-DscLocalConfigurationManager -CimSession $computerNames
+Set-DscLocalConfigurationManager -CimSession $session -Path $configPath -Verbose
+
+Get-DscLocalConfigurationManager -CimSession $session
