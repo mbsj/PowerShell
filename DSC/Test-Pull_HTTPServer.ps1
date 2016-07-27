@@ -1,21 +1,15 @@
-$pullLocalPath = "C:\DSC\Config\PullServer\PullWeb" # On pull server
-$dscModulePath = "C:\DSC\Config\PullServer\Modules" # On pull server
-$dscConfigurationPath = "C:\DSC\Config\PullServer\Configs" # On pull server
-$configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\MOF"
-
-$computerNames = "DSC-SERVER"
-$credentials = New-Object System.Management.Automation.PSCredential ("Administrator", (ConvertTo-SecureString "9VBatteryEel" -AsPlainText -Force))
-
 #Install-Module -Name xPSDesiredStateConfiguration
 #Get-DscResource -Name xDSCWebService -Syntax
 
 #Destination server must have all DscResource modules (xPSDesiredStateConfiguration)
 
+$configData = & (Join-Path $PSScriptRoot "Test-ConfigurationData.ps1")
+
 Configuration HTTPPullServer {
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
     Import-DscResource -ModuleName PSDesiredStateConfiguration
 
-    Node $computerNames {
+    Node $AllNodes.Where{$_.Role -eq "PullServer"}.NodeName {
         WindowsFeature DSCWebService {
             Name = "DSC-Service"
             Ensure = "Present"
@@ -25,16 +19,17 @@ Configuration HTTPPullServer {
             Ensure = "Present"
             EndpointName = "DSCPullServer"
             Port = 8080
-            PhysicalPath = $pullLocalPath
+            PhysicalPath = $Node.PhysicalPath
             CertificateThumbPrint = "AllowUnencryptedTraffic" # Certificate thumb print on IIS server
-            ModulePath = $dscModulePath
-            ConfigurationPath = $dscConfigurationPath
+            ModulePath = $Node.ModulePath
+            ConfigurationPath = $Node.ConfigurationPath
             State = "Started"
             DependsOn = "[WindowsFeature]DSCWebService"
         }
     }
 }
 
-HTTPPullServer -OutputPath $configPath
+# ConfigurationData can be a psd1 file with hash table
+HTTPPullServer -ConfigurationData $configData -OutputPath $configData.NonNodeData.ConfigPath
 
-Start-DscConfiguration -Credential $credentials -Path $configPath -ComputerName $computerNames -Verbose -Wait -Force #-Force to allow PUSH operation in PULL mode
+Start-DscConfiguration -Credential $configData.NonNodeData.Credentials -Path $configData.NonNodeData.ConfigPath -ComputerName ($configData.AllNodes.Where{$_.Role -eq "PullServer"}.NodeName) -Verbose -Wait -Force

@@ -1,41 +1,30 @@
-$httpPullUri = "http://DSC-SERVER:8080/PSDSCPullServer.svc" # Web service created using xPSDesiredStateConfiguration
-$configPath = "C:\Users\Mark\OneDrive\PowerShell\DSC\Config\MOF"
-
-$computerNames = "DSC-CLIENT"
-$credentials = New-Object System.Management.Automation.PSCredential ("Administrator", (ConvertTo-SecureString "9VBatteryEel" -AsPlainText -Force))
+$configData = & (Join-Path $PSScriptRoot "Test-ConfigurationData.ps1")
 
 [DSCLocalConfigurationManager()]
 Configuration PullHTTPConfig {
-    param (
-        [Parameter(Mandatory=$true)]
-        [String[]]$ComputerName,
-
-        [Parameter(Mandatory=$true)]
-        [String]$GUID
-    )
-
-    Node $ComputerName {
+    Node $AllNodes.Where{$_.Role -eq "Client"}.NodeName {
         Settings {
             AllowModuleOverwrite = $true
             ConfigurationMode = 'ApplyAndAutoCorrect'
             RefreshMode = 'Pull'
             RebootNodeIfNeeded = $true
-            ConfigurationID = $GUID
+            ConfigurationID = $Node.GUID
+            ConfigurationModeFrequencyMins = 15
             RefreshFrequencyMins = 30
         } 
 
         ConfigurationRepositoryWeb HTTPPull {
-            ServerURL = $httpPullUri
+            ServerURL = $ConfigurationData.NonNodeData.HTTPPullUri
             AllowUnsecureConnection = $true # For non-secure (http)
         }
     }
 }
 
 # GUID = New-Guid - Paired with config
-PullHTTPConfig -ComputerName $computerNames -GUID "ef4e3f76-6da5-4c0e-8a6c-7978ac85acc5" -OutputPath $configPath
+PullHTTPConfig -ConfigurationData $configData -OutputPath $configData.NonNodeData.ConfigPath
 
-$session = New-CimSession -ComputerName $computerNames -Credential $credentials
+$session = New-CimSession -ComputerName ($configData.AllNodes.Where{$_.Role -eq "Client"}.NodeName) -Credential $configData.NonNodeData.Credentials
 
-Set-DscLocalConfigurationManager -CimSession $session -Path $configPath -Verbose
+Set-DscLocalConfigurationManager -CimSession $session -Path $configData.NonNodeData.ConfigPath -Verbose
 
 Get-DscLocalConfigurationManager -CimSession $session
