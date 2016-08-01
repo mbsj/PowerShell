@@ -2,12 +2,15 @@ $configData = & (Join-Path $PSScriptRoot "Test-ConfigurationData.ps1")
 
 Configuration TelnetClientInstalled {
     Import-DscResource -ModuleName "PSDesiredStateConfiguration"
+    Import-DscResource -ModuleName "TestDSCModule"
 
     Node $AllNodes.Where{$_.Role -eq "Client"}.NodeName {
         WindowsFeature TelnetClient {
             Name = "Telnet-Client"
             Ensure = "Present"
         }
+
+        
     }
 }
 

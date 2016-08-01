@@ -13,4 +13,4 @@ New-xDscResource -Name "TestService" -Path $modulePath -Property $(
     New-xDscResourceProperty -Name Ensure -Type String -Attribute Write -ValidateSet "Present","Absent"
 ) -Force -Verbose
 
-New-ModuleManifest -Path (Join-Path $modulePath "TestService.psd1") -Guid (New-Guid) -ModuleVersion 1.0 -Author "Mark Birkedal Stjerslev Jakobsen" -CompanyName "N/A" -Description "Service test resource to demonstrate custom resources" -RootModule "$moduleName.psm1" -Verbose
+New-ModuleManifest -Path (Join-Path $modulePath "$moduleName.psd1") -Guid (New-Guid) -ModuleVersion 1.0 -Author "Mark Birkedal Stjerslev Jakobsen" -CompanyName "N/A" -Description "Service test resource to demonstrate custom resources" -RootModule "$moduleName.psm1" -Verbose
