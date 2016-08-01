@@ -1,6 +1,6 @@
 $configData = & (Join-Path $PSScriptRoot "Test-ConfigurationData.ps1")
 
-Configuration TelnetClientInstalled {
+Configuration TelnetAndTest {
     Import-DscResource -ModuleName "PSDesiredStateConfiguration"
     Import-DscResource -ModuleName "TestDSCModule"
 
@@ -10,11 +10,15 @@ Configuration TelnetClientInstalled {
             Ensure = "Present"
         }
 
-        
+        TestService bits {
+            Name = "w3svc"
+            Status = "Stopped"
+            Ensure = "Present"
+        }
     }
 }
 
-TelnetClientInstalled -ConfigurationData $configData -OutputPath $configData.NonNodeData.ConfigPath
+TelnetAndTest -ConfigurationData $configData -OutputPath $configData.NonNodeData.ConfigPath
 
 # Clients look for GUID as set in LCM setup.
 # GUID - Get GUID dynamically from servers or set statically
