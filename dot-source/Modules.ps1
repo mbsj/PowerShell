@@ -1,5 +1,6 @@
 $modules = @(
     "PowerShellCookbook",
+    "PSScriptAnalyzer",
     "xPSDesiredStateConfiguration",
     "xDSCResourceDesigner"
 )
