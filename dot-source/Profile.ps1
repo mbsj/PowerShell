@@ -1,3 +1,9 @@
+Set-StrictMode -Version Latest
+
+if ($Host.Name -eq "ConsoleHost" -and $env:COMPUTERNAME -eq "H46330") {
+    Select-Window -ActiveWindow | Set-WindowPosition -Left 10 -Top 10
+}
+
 function prompt
 {
     $host.ui.rawui.WindowTitle = $Env:USERNAME + " - " + $Env:COMPUTERNAME + " - " + $Host.Name + " - " + $Host.Version

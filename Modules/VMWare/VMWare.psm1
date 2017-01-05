@@ -1,32 +1,46 @@
-﻿function Get-VICommand { 
-    Get-Command -pssnapin VMware.VimAutomation.Core 
-}
-
-function Connect-VIVCenter { 
-    Connect-VIServer -Credential (Get-Credential)
-}
-
-New-Alias -Name Disconnect-VI -Value Disconnect-VIServer
-
+﻿<#
+.Synopsis
+   Adds VMWare modules and functions to current PowerShell session an dconnects to VI Server
+.DESCRIPTION
+   Adds VMWAre core snapin to current PowerShell session and adds VI propertie for VMWare tools. 
+   Then connects to the default VI server
+#>
 function Add-VMWare { 
+    [CmdletBinding(DefaultParameterSetName="Normal", 
+                  SupportsShouldProcess=$false, 
+                  ConfirmImpact='Low')]
+    param()
+
     Add-PSSnapin Vmware.VimAutomation.Core 
-    #. "C:\Program Files (x86)\VMware\Infrastructure\vSphere PowerCLI\Scripts\Initialize-PowerCLIEnvironment.ps1"
 
     New-VIProperty -Name ToolsVersion -ObjectType VirtualMachine -ValueFromExtensionProperty 'Config.tools.ToolsVersion' | Out-Null
     New-VIProperty -Name ToolsStatus -ObjectType VirtualMachine -ValueFromExtensionProperty 'Guest.ToolsVersionStatus' | Out-Null
 
     Write-Host "Connecting to VCenter Server..."
-    Connect-VIVCenter
+    Connect-VIServer
 }
 
+<#
+.Synopsis
+   Gets orphaned disks in VMWare
+.DESCRIPTION
+   Gets a reports of all harddisks in VMWare which are not connected to a virtual machine
+.EXAMPLE
+   Get-OrphanedDisks
+
+   Creates a disk report file on the desktop named "VMWareOrphanedDisks.csv"
+.EXAMPLE
+   Get-OrphanedDisks -ReportPath C:\Temp\Report.csv
+
+   Createsd a report at C:\Temp\Report.csv
+#>
 function Get-OrphanedDisks {
     param (
-        [string]$ReportPath
+        #Path for the reports file.
+        [Parmaeter(Position=0)]
+        [ValidateNotNullOrEmpty()]
+        [string]$ReportPath = (Join-Path $env:USERPROFILE "Desktop" | Join-Path -ChildPath "VMWareOrphanedDisks.csv")
     )
-
-    if ([string]::IsNullOrWhiteSpace($ReportPath)) {
-        $ReportPath = Join-Path $env:USERPROFILE "Desktop" | Join-Path -ChildPath "VMWareOrphanedDisks.csv"
-    }
 
     Write-Host -ForegroundColor Green "Saving report to" $ReportPath
 
