@@ -140,3 +140,10 @@ function Get-PasswordSecureString {
 }
 
 $Test2016Credentials = New-Object System.Management.Automation.PSCredential (“Administrator”, (ConvertTo-SecureString “9VBatteryEel” -AsPlainText -Force))
+
+$STSMySQL = New-Object psobject
+$STSMySQL | Add-Member -MemberType NoteProperty -Name Host -Value "172.30.211.156"
+$STSMySQL | Add-Member -MemberType NoteProperty -Name Username -Value "z8mvj"
+$STSMySQL | Add-Member -MemberType NoteProperty -Name Password -Value "jCXNg4y5x6"
+
+Export-ModuleMember -Function * -Variable *
