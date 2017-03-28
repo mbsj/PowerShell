@@ -20,11 +20,6 @@
    $queries | .\Invoke-SQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB
 
    $queries is an array of several query strings. One connection is made after which each query is invoked agains the server as in the first example. 
-.INPUTS
-   System.String
-   System.Int
-.OUTPUTS
-   System.Data.DataRow
 .NOTES
     Be cautious when executing multiple queries agains different tables. As each table will return different properies, these may be hidden when using i.e. Format-Table to format output. 
     The formating cmdlet will use the first objects to define the properties to show, and so will not show properties for rows returned later in the result set. 
