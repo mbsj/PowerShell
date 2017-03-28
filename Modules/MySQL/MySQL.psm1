@@ -4,20 +4,15 @@
 .DESCRIPTION
     Invokes one or more queries agains a specified MySQL database. Result set is loaded into data table rows and returned directly. 
 .EXAMPLE
-   .\Invoke-MySQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB
+   .\Invoke-MySQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB -Username DBUser -Password SuperSecretPassword
 
    Invokes the query against the specified server and database. Uses a trusted connection and the default timeout of 10 seconds. 
 .EXAMPLE
-   .\Invoke-MySQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB -Timeout 60
+   .\Invoke-MySQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB -Timeout 60 -Username DBUser -Password SuperSecretPassword
 
    Invokes the query against the specified server and database. Uses a trusted connection and specifies a long er timeout og 60 seconds.
 .EXAMPLE
-   .\Invoke-MySQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB -Username DBUser -Password SuperSecretPassword
-
-   Invokes the query against the specified server and database but connects using standard security. 
-   This requires an explicit username and password which is specified in -Username and -Password
-.EXAMPLE
-   $queries | .\Invoke-MySQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB
+   $queries | .\Invoke-MySQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB -Username DBUser -Password SuperSecretPassword
 
    $queries is an array of several query strings. One connection is made after which each query is invoked agains the server as in the first example. 
 .NOTES
