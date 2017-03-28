@@ -76,7 +76,7 @@ function Invoke-SQL {
             default { throw "Unable to determine ParameterSetName" }
         }
 
-        $connection = New-Object System.Data.SqlClient.SqlConnection($connectionString);
+        $connection = New-Object System.Data.SqlClient.SqlConnection($connectionString)
 
         $connection.Open()
         Write-Verbose "Connected to $Server"

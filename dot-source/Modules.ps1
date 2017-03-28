@@ -10,7 +10,8 @@ $modules = @(
     "ISEModuleBrowserAddon",
     "ScriptBrowser",
     "ISERemoteTab",
-    "WASP"
+    "WASP",
+    "Pester"
 )
 
 $Global:missingModules = @()
