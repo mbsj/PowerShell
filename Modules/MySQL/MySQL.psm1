@@ -62,7 +62,11 @@ function Invoke-MySQL {
         $connection.ConnectionString = "Server=$Server;Uid=$Username;Pwd=$PlainTextPassword;database=$Database;"
 
         if ($pscmdlet.ShouldProcess("$Server\$Database", "Open connection")) {
+            try {
             $connection.Open()
+            } catch {
+                throw $_
+            }
         }
     }
     
@@ -72,7 +76,7 @@ function Invoke-MySQL {
             $dataAdapter = New-Object MySql.Data.MySqlClient.MySqlDataAdapter($Command)
             $dataSet = New-Object System.Data.DataSet
 
-            $dataAdapter.Fill($dataSet, "data")
+            $dataAdapter.Fill($dataSet, "data") | Out-Null
 
             $dataSet.Tables[0]
         }
