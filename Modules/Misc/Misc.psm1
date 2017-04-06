@@ -113,11 +113,11 @@ function Set-ScriptCertificate {
 }
 
 
-function Suspend-Screensaver {
+function Suspend-ScreenSaver {
     [CmdletBinding(ConfirmImpact='Low')]
     param(
         [Parameter(Position=0)]
-        [int]$SleepSeconds = 60
+        [int]$Delay = 60
     )
 
     $wscriptShell = New-Object -COM "WScript.Shell"
@@ -125,7 +125,7 @@ function Suspend-Screensaver {
     while ($true) {
         $wscriptShell.SendKeys("{F15}")
 
-        Start-Sleep -Seconds $SleepSeconds
+        Start-Sleep -Seconds $Delay
     }
 }
 
