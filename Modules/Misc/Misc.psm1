@@ -90,14 +90,14 @@ function Set-ScriptCertificate {
     $cert = $null
 
     if ($codeSigningCerts.Count -lt 1) {
-        Write-Host "No code signing certificates found. At least one is required." -ForegroundColor Red
+        Write-Error "No code signing certificates found. At least one is required." -ForegroundColor Red
         return
     }
     elseif ($codeSigningCerts.Count -gt 1) {
-        Write-Host "More than one certificate found. Please select one:" -ForegroundColor Green
+        Write-Warning "More than one certificate found. Please select one:" -ForegroundColor Green
 
         for ($i = 0; $i -lt $codeSigningCerts.Count; $i++) {
-            Write-Host ($i + 1) " - SUBJECT:" $codeSigningCerts[$i].Subject "`tSERIAL NUMBER:" $codeSigningCerts[$i].SerialNumber
+            Write-Output -InputObject (($i + 1) + " - SUBJECT:" + $codeSigningCerts[$i].Subject + "`tSERIAL NUMBER:" + $codeSigningCerts[$i].SerialNumber)
         }
 
         $selected = -1 
@@ -141,7 +141,7 @@ function Get-PasswordSecureString {
     $Password | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
 }
 
-$Test2016Credentials = New-Object System.Management.Automation.PSCredential (“Administrator”, (ConvertTo-SecureString “9VBatteryEel” -AsPlainText -Force))
+$Test2016Credentials = New-Object System.Management.Automation.PSCredential (“Administrator”, (ConvertTo-SecureString "9VBatteryEel" -AsPlainText -Force))
 
 $STSMySQL = New-Object psobject
 $STSMySQL | Add-Member -MemberType NoteProperty -Name Host -Value "172.30.211.156"
