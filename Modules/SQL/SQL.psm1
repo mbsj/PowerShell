@@ -49,8 +49,8 @@ function Invoke-SQL {
         [String]$Database,
 
         # Timeout for the query
-        [Parameter(ParameterSetName='Trusted Connection')]
-        [Parameter(ParameterSetName='Standard Security')]
+        [Parameter(Position=3, ParameterSetName='Trusted Connection')]
+        [Parameter(Position=3, ParameterSetName='Standard Security')]
         [ValidateScript({$_ -gt 0})]
         [Int]$Timeout = 10,
 
