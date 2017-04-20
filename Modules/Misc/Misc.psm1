@@ -14,14 +14,16 @@
    Creates 4 numeric passwords with a length of 10 characters
 #>
 function Get-Password() {
-    [CmdletBinding(DefaultParameterSetName = "Numeric", ConfirmImpact = 'Low')]
+    [CmdletBinding(DefaultParameterSetName = "Simple", ConfirmImpact = 'Low')]
     param(
         # The number of characters in the password
+        [Parameter(Position = 0, ParameterSetName = "Simple")]
         [Parameter(Position = 0, ParameterSetName = "Numeric")]
         [Parameter(Position = 0, ParameterSetName = "Complex")]
         [int]$Length = 16,
 
         # The number of passwords to generate
+        [Parameter(Position = 0, ParameterSetName = "Simple")]
         [Parameter(Position = 1, ParameterSetName = "Numeric")]
         [Parameter(Position = 1, ParameterSetName = "Complex")]
         [int]$Count = 1,
@@ -33,7 +35,6 @@ function Get-Password() {
         # Whether the password should use special characters
         [Parameter(ParameterSetName = "Complex")]
         [Switch]$Complex
-
     )
 
     $passwords = @()
