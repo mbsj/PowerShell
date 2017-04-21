@@ -4,6 +4,14 @@
         {
             "type": "PowerShell",
             "request": "launch",
+            "name": "PowerShell Pester Tests (current file)",
+            "script": "Invoke-Pester",
+            "args": ["-Script ${file}"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
             "name": "PowerShell Pester Tests",
             "script": "Invoke-Pester",
             "args": [],
