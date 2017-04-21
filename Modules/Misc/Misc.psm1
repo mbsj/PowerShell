@@ -77,7 +77,7 @@ function Get-Password() {
    Signs the script C:\Temp\Get-Output.ps1
 #>
 function Set-ScriptCertificate {
-    [CmdletBinding(ConfirmImpact = 'Low')]
+    [CmdletBinding(ConfirmImpact = 'Low', SupportsShouldProcess = $true)]
     param (
         # The path to the script which should be signed
         [Parameter(Mandatory = $true)]
@@ -111,7 +111,9 @@ function Set-ScriptCertificate {
         $cert = $codeSigningCerts[0]
     }
 
-    Set-AuthenticodeSignature -Certificate $cert -FilePath $ScriptPath
+    if ($pscmdlet.ShouldProcess("$ScriptPath", "Signing with $cert")) {
+        Set-AuthenticodeSignature -Certificate $cert -FilePath $ScriptPath
+    }
 }
 
 
@@ -133,6 +135,8 @@ function Suspend-ScreenSaver {
 
 function Get-PasswordSecureString {
     [CmdletBinding(ConfirmImpact = 'Low')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingConvertToSecureStringWithPlainText", "")]
     param(
         [Parameter(Mandatory = $true, Position = 0)]
         [String]$PlainTextPassword
@@ -141,7 +145,13 @@ function Get-PasswordSecureString {
     $Password | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
 }
 
-$Test2016Credentials = New-Object System.Management.Automation.PSCredential (“Administrator”, (ConvertTo-SecureString "9VBatteryEel" -AsPlainText -Force))
+function Get-TestCredential {
+    [CmdletBinding(ConfirmImpact = 'Low')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingConvertToSecureStringWithPlainText", "")]
+    param()
+
+    New-Object System.Management.Automation.PSCredential (“Administrator”, (ConvertTo-SecureString "9VBatteryEel" -AsPlainText -Force))
+}
 
 $STSMySQL = New-Object psobject
 $STSMySQL | Add-Member -MemberType NoteProperty -Name Host -Value "172.30.211.156"

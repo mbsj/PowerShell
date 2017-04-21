@@ -16,7 +16,7 @@ function Add-VMWare {
     New-VIProperty -Name ToolsVersion -ObjectType VirtualMachine -ValueFromExtensionProperty 'Config.tools.ToolsVersion' | Out-Null
     New-VIProperty -Name ToolsStatus -ObjectType VirtualMachine -ValueFromExtensionProperty 'Guest.ToolsVersionStatus' | Out-Null
 
-    Write-Host "Connecting to VCenter Server..."
+    Write-Verbose "Connecting to VCenter Server..."
     Connect-VIServer
 }
 
@@ -34,7 +34,7 @@ function Add-VMWare {
 
    Createsd a report at C:\Temp\Report.csv
 #>
-function Get-OrphanedDisks {
+function Get-OrphanedDisk {
     param (
         #Path for the reports file.
         [Parmaeter(Position=0)]
@@ -42,7 +42,7 @@ function Get-OrphanedDisks {
         [string]$ReportPath = (Join-Path $env:USERPROFILE "Desktop" | Join-Path -ChildPath "VMWareOrphanedDisks.csv")
     )
 
-    Write-Host -ForegroundColor Green "Saving report to" $ReportPath
+    Write-Verbose "Saving report to" $ReportPath
 
     if (Test-Path $ReportPath){
         throw "Report file already exists."
@@ -84,7 +84,7 @@ function Get-OrphanedDisks {
         }
     }
  
-    Write-Host -ForegroundColor Yellow "Writing report."
+    Write-Output "Writing report."
     $orphaned | ForEach-Object {
         $store = $_.Substring(1, $_.IndexOf(']') - 1).Trim()
         $file = $_.Substring($_.IndexOf(']') + 2).Trim()

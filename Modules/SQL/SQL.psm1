@@ -29,6 +29,8 @@ function Invoke-SQL {
                     SupportsShouldProcess=$true, 
                     PositionalBinding=$false,
                     ConfirmImpact='Medium')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingUserNameAndPassWordParams", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
     [OutputType([System.Data.DataRow])]
     Param
     (

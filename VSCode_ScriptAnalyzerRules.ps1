@@ -25,7 +25,6 @@
         "PSMissingModuleManifestField",
         "PSPlaceCloseBrace",
         "PSPlaceOpenBrace",
-        "PSPossibleIncorrectComparisonWithNull",
         "PSProvideCommentHelp",
         "PSUseApprovedVerbs",
         "PSUseBOMForUnicodeEncodedFile",

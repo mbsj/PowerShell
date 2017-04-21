@@ -11,6 +11,8 @@
 function Test-ADAuthentication {
     [CmdletBinding(SupportsShouldProcess = $false,
         ConfirmImpact = 'Low')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingUserNameAndPassWordParams", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
     param(
         # Username to test
         [Parameter(Mandatory = $true, Position = 0)]
@@ -45,7 +47,7 @@ function Test-ADAuthentication {
 
    Disable stale domain users, which have been inactive for more than 30 days.
 #>
-function Get-StaleDomainAdmins {
+function Get-StaleDomainAdmin {
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
     [OutputType([String])]
     Param

@@ -23,6 +23,8 @@ function Invoke-MySQL {
     [CmdletBinding(SupportsShouldProcess = $true, 
         PositionalBinding = $false,
         ConfirmImpact = 'Medium')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingUserNameAndPassWordParams", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
     [OutputType([System.Data.DataRow])]
     Param
     (
