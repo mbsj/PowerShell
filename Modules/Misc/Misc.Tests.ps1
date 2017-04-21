@@ -1,4 +1,4 @@
-Import-Module Misc -Force
+Import-Module .\Modules\Misc -Force
 
 InModuleScope Misc {
     Describe "Get-Password" {
