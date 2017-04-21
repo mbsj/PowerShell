@@ -16,8 +16,20 @@ Describe "Sync-Directories" {
             "File3"
         )
 
+        $destinationFiles = @(
+            "File3"
+            "File4.png",
+            "File5"
+        )
+
         $sourceFiles | ForEach-Object {
             New-Item -Path $testDriveSource -Name $_ -ItemType File
+        }
+
+        Add-Content -Value "Source data" -Path (Join-Path -Path $testDriveSource -ChildPath "File3")
+
+        $destinationFiles | ForEach-Object {
+            New-Item -Path $testDriveDestination -Name $_ -ItemType File
         }
 
         $sourceFiles | ForEach-Object {
@@ -26,11 +38,17 @@ Describe "Sync-Directories" {
             }
         }
 
-        New-Item -Path $testDriveLog -ItemType File
-
-        It "Destination should be empty" {
-            Get-ChildItem -Path $testDriveDestination -Recurse | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0
+        $destinationFiles | ForEach-Object {
+            It "Destination should have files $_" {
+                Join-Path -Path $testDriveDestination -ChildPath $_ | Should Exist
+            }
         }
+
+        It "Destionation file File3 should be empty" {
+            Get-Item -Path (Join-Path -Path $testDriveDestination -ChildPath "File3") | Select-Object -ExpandProperty Length | Should Be 0
+        }
+
+        New-Item -Path $testDriveLog -ItemType File
         
         It "Script should run without error" {
             $physicalSource = Get-Item $testDriveSource
@@ -43,9 +61,22 @@ Describe "Sync-Directories" {
         }
 
         $sourceFiles | ForEach-Object {
-            It "Destination should have file $_" {
+            It "Destination should have source file $_" {
                 Join-Path -Path $testDriveDestination -ChildPath $_ | Should Exist
             }
+        }
+
+        $destinationFiles | ForEach-Object {
+            It "Destination should still have destination file $_" {
+                Join-Path -Path $testDriveDestination -ChildPath $_ | Should Exist
+            }
+        }
+
+        It "Destination file File3 should contain data from source file File3" {
+            $sourceContent = Get-Content -Path (Join-Path -Path $testDriveSource -ChildPath "File3")
+            $destinationContent = Get-Content -Path (Join-Path -Path $testDriveDestination -ChildPath "File3")
+
+            $destinationContent | Should Be $sourceContent
         }
 
         It "Log file should contain data" {
@@ -70,6 +101,8 @@ Describe "Sync-Directories" {
             New-Item -Path $testDriveSource -Name $_ -ItemType File
         }
 
+        Add-Content -Value "Source data" -Path (Join-Path -Path $testDriveSource -ChildPath "File3")
+
         $destinationFiles | ForEach-Object {
             New-Item -Path $testDriveDestination -Name $_ -ItemType File
         }
@@ -86,6 +119,10 @@ Describe "Sync-Directories" {
             It "Destination should have files $_" {
                 Join-Path -Path $testDriveDestination -ChildPath $_ | Should Exist
             }
+        }
+
+        It "Destionation file File3 should be empty" {
+            Get-Item -Path (Join-Path -Path $testDriveDestination -ChildPath "File3") | Select-Object -ExpandProperty Length | Should Be 0
         }
         
         It "Script should run without error" {
@@ -114,6 +151,13 @@ Describe "Sync-Directories" {
             It "Destination should not contain file $_, not present in source" {
                 Join-Path -Path $testDriveSource -ChildPath $_ | Should Not Exist
             }
+        }
+
+        It "Destination file File3 should contain data from source file File3" {
+            $sourceContent = Get-Content -Path (Join-Path -Path $testDriveSource -ChildPath "File3")
+            $destinationContent = Get-Content -Path (Join-Path -Path $testDriveDestination -ChildPath "File3")
+
+            $destinationContent | Should Be $sourceContent
         }
 
         It "Log file should contain data" {
