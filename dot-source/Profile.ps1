@@ -1,8 +1,8 @@
 Set-StrictMode -Version Latest
 
-if ($Host.Name -eq "ConsoleHost" -and $env:COMPUTERNAME -eq "H46330") {
-    Select-Window -ActiveWindow | Set-WindowPosition -Left 10 -Top 10
-}
+# if ($Host.Name -eq "ConsoleHost" -and $env:COMPUTERNAME -eq "H46330") {
+#     Select-Window -ActiveWindow | Set-WindowPosition -Left 10 -Top 10
+# }
 
 function prompt
 {
@@ -10,28 +10,56 @@ function prompt
     "PS " + $(get-location) + ">"
 }
 
-if ([System.Environment]::OSVersion.Version.Major -ge 6 -and [System.Environment]::OSVersion.Version.Minor -ge 2) {
-    New-AliAs -Name Get-DNS -Value Resolve-DnsName
-} else {
-    function Get-DNS {
-        param (
-            [String] $HostName,
-            [String] $Type,
-            [String] $Server
-        )
+$env:PSModulePath += ";C:\Users\$env:USERNAME\OneDrive\PowerShell\Modules"
+$env:PSModulePath += ";C:\Users\$env:USERNAME\OneDrive - KMD\PowerShell_KMD\Modules"
 
-        if ([String]::IsNullOrWhiteSpace($Type)) {
-            $Type = "A"
-        }
+$modules = @(
+    "PSReadLine",
+    "PowerShellCookbook",
+    "PSScriptAnalyzer",
+    "xPSDesiredStateConfiguration",
+    "xDSCResourceDesigner",
+    "ISEModuleBrowserAddon",
+    "ScriptBrowser",
+    "ISERemoteTab",
+    "WASP",
+    "Pester"
+)
 
-        $command = "C:\Windows\System32\nslookup.exe"
-        $type = "-query=$Type"
-        $hostName = "$HostName"
-        $server = "$Server"
-
-        $eap = $ErrorActionPreference
-        $ErrorActionPreference = "SilentlyContinue"
-        &$command $type $hostName $server
-        $ErrorActionPreference = $eap
+$missingModules = @()
+$modules | ForEach-Object {
+    if (-not (Get-Module -ListAvailable $_)) {
+        Write-Warning "Module $_ not installed."
+        $missingModules += $_
     }
+}
+
+if (Get-Module -ListAvailable "PowerShellCookbook") {
+    Import-Module PowerShellCookbook -Prefix "Cookbook"
+}
+
+if ($missingModules) {
+    Write-Warning "To install missing modules, use function `"Install-MissingModules`""
+}
+
+<#
+.Synopsis
+   Installs missing modules.
+.DESCRIPTION
+   Installs any and all missing modules as listed in variable $Global:missingModules
+.EXAMPLE
+  Install-MissingModule
+
+  Installs all missing modules. 
+.EXAMPLE
+   Install-MissingModule -Verbose
+
+   Installs all missing modules with verbose output.
+#>
+function Install-MissingModule
+{
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+    Param()
+
+    Install-Module -Name $missingModules -Verbose:$VerbosePreference -WhatIf:$WhatIfPreference
 }
