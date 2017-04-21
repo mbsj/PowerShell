@@ -18,7 +18,7 @@ $Global:missingModules = @()
 $modules | ForEach-Object {
     if (-not (Get-Module -ListAvailable $_)) {
         Write-Warning "Module $_ not installed."
-        $missingModules += $_
+        $Global:missingModules += $_
     }
 }
 
@@ -36,15 +36,15 @@ if ($Global:missingModules) {
 .DESCRIPTION
    Installs any and all missing modules as listed in variable $Global:missingModules
 .EXAMPLE
-  Install-MissingModules
+  Install-MissingModule
 
   Installs all missing modules. 
 .EXAMPLE
-   Install-MissingModules -Verbose
+   Install-MissingModule -Verbose
 
    Installs all missing modules with verbose output.
 #>
-function Install-MissingModules
+function Install-MissingModule
 {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     Param()
