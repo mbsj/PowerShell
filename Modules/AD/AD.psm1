@@ -119,16 +119,7 @@ function Get-StaleDomainAdmin {
 
         Write-Verbose "Found $(($staleUsers | Measure-Object).Count) stale users after filtering for special accounts."
 
-        if ($staleUsers) {
-            $staleUsers | ForEach-Object {
-                if ($pscmdlet.ShouldProcess($_.DistinguishedName, "Disable AD user")) {
-                    Disable-ADAccount -Identity $_.DistinguishedName
-                }
-            }
-        }
-        else {
-            Write-Verbose "No stale users to disable"
-        }
+        $staleUsers
     }
     End {
     }
