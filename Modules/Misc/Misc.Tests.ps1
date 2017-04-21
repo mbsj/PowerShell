@@ -1,4 +1,4 @@
-Import-Module .\Modules\Misc -Force
+Import-Module $PSScriptRoot -Force
 
 InModuleScope Misc {
     Describe "Get-Password" {
