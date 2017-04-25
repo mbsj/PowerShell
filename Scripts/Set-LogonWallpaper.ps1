@@ -13,7 +13,11 @@ Param (
     [Parameter(Mandatory = $true, Position = 0)]
     [ValidateNotNullOrEmpty()]
     [ValidateScript( {Test-Path -Path $_ -PathType Leaf})]
-    [String[]]$ImagePath
+    [String[]]$ImagePath,
+
+    # Force the OEM backgrounds folder to be recreated if it exists
+    [Parameter()]
+    [Switch]$Force
 )
 
 begin {
@@ -22,11 +26,15 @@ begin {
 }
 
 process {
-    Set-ItemProperty -Path $regKey -Name "OEMBackground" -Value 1 -Type DWord -WhatIf:$WhatIfPreference
+    Set-ItemProperty -Path $regKey -Name "OEMBackground" -Value 1 -Type DWord -Force -WhatIf:$WhatIfPreference
 
-    if (-not (Test-Path $oemPath)) {
-        New-Item $oemPath -ItemType Directory -Force -WhatIf:$WhatIfPreference
+    if ($Force -and (Test-Path $oemPath)) {
+        Remove-Item -Path $oemPath -Recurse -Force
     }
+
+    if (-not (Test-Path $oemPath) -or $Force) {
+        New-Item -Path $oemPath -ItemType Directory -Force -WhatIf:$WhatIfPreference
+    } 
 
     Copy-Item -Path $ImagePath -Destination (Join-Path -Path $oemPath -ChildPath "backgroundDefault.jpg") -Force -WhatIf:$WhatIfPreference
 }
