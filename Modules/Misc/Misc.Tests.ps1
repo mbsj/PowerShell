@@ -102,4 +102,24 @@ InModuleScope Misc {
             }
         }
     }
+
+    Describe "Suspend-ScreenSaver" {
+        It "Should run without error" {
+            { Suspend-ScreenSaver -Delay 1 -TimeOut 0.01 } | Should Not Throw
+        }
+    }
+
+    Describe "Get-TestCredential" {
+        It "Should run without error" {
+            { Get-TestCredential } | Should Not Throw
+        }
+
+        It "UserName should be `"Administrator`"" {
+            Get-TestCredential | Select-Object -ExpandProperty UserName | Should Be "Administrator"
+        }
+
+        It "Password should be a secure string" {
+            Get-TestCredential | Select-Object -ExpandProperty Password | Should BeOfType "System.Security.SecureString"
+        }
+    }
 }
