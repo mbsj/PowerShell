@@ -44,7 +44,7 @@ Describe "Sync-Directories" {
             }
         }
 
-        It "Destionation file File3 should be empty" {
+        It "Destination file File3 should be empty" {
             Get-Item -Path (Join-Path -Path $testDriveDestination -ChildPath "File3") | Select-Object -ExpandProperty Length | Should Be 0
         }
 
@@ -54,6 +54,8 @@ Describe "Sync-Directories" {
             $physicalSource = Get-Item $testDriveSource
             $physicalDestination = Get-Item $testDriveDestination
             $physicalLog = Get-Item $testDriveLog
+
+            Get-Item $testDriveLog | Remove-Item
 
             $syncScript = { & $scriptFile -LogPath $physicalLog -SourcePath $physicalSource -DestinationPath $physicalDestination } 
             
@@ -121,7 +123,7 @@ Describe "Sync-Directories" {
             }
         }
 
-        It "Destionation file File3 should be empty" {
+        It "Destination file File3 should be empty" {
             Get-Item -Path (Join-Path -Path $testDriveDestination -ChildPath "File3") | Select-Object -ExpandProperty Length | Should Be 0
         }
         
@@ -129,6 +131,8 @@ Describe "Sync-Directories" {
             $physicalSource = Get-Item $testDriveSource
             $physicalDestination = Get-Item $testDriveDestination
             $physicalLog = Get-Item $testDriveLog
+
+            Get-Item $testDriveLog | Remove-Item
 
             $syncScript = { & $scriptFile -LogPath $physicalLog -SourcePath $physicalSource -DestinationPath $physicalDestination -Mirror } 
             
@@ -162,6 +166,42 @@ Describe "Sync-Directories" {
 
         It "Log file should contain data" {
             Get-Item -Path $testDriveLog | Select-Object -ExpandProperty Length | Should BeGreaterThan 0
+        }
+    }
+
+    Context "Log rotation" {
+        New-Item -Path $testDriveLog -ItemType File
+        $physicalLog = Get-Item $testDriveLog
+
+        $file = [System.IO.File]::Create($physicalLog)
+        $file.SetLength(11MB)
+        $file.Close()
+
+        $logHash = Get-FileHash -Path $testDriveLog
+
+        New-Item -Path ($testDriveLog + ".old") -ItemType File
+
+        It "Script should run without error" {
+            $physicalSource = Get-Item $testDriveSource
+            $physicalDestination = Get-Item $testDriveDestination
+
+            $syncScript = { & $scriptFile -LogPath $physicalLog -SourcePath $physicalSource -DestinationPath $physicalDestination -Mirror } 
+            
+            $syncScript | Should Not Throw
+        }
+
+        It "Log should be moved to old log" {
+            $oldLogHash = Get-FileHash -Path ($testDriveLog + ".old")
+
+            $oldLogHash.Hash | Should Be $logHash.Hash
+        }
+
+        It "New log should contain run information" {
+            $logContent = Get-Content -Path $testDriveLog -Raw
+
+            $logContent | Should MatchExactly "SYNC START"
+            $logContent | Should MatchExactly "SyncTest"
+            $logContent | Should MatchExactly "SYNC END"
         }
     }
 }
