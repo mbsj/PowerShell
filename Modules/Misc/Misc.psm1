@@ -114,5 +114,5 @@ function Get-TestCredential {
 
     $passwordSecureString = "01000000d08c9ddf0115d1118c7a00c04fc297eb01000000bedb5723bcf0a548b619ca968df80ece0000000002000000000003660000c000000010000000985f7ff40ccae1b4385ecd7d11935fb40000000004800000a000000010000000fc3db66bc3d96f1e528a982f2ce5e0b520000000f71fa436fc15dae8bff1d5dc4d12c059591c394a19729b1cbd3cd1d4474a7683140000000f1a66d0504492b58a0b741e45e69ee5e4430942"
 
-    New-Object System.Management.Automation.PSCredential (“Administrator”, ($passwordSecureString | ConvertTo-SecureString))
+    New-Object System.Management.Automation.PSCredential ("Administrator", ($passwordSecureString | ConvertTo-SecureString))
 }
