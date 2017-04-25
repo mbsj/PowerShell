@@ -8,12 +8,12 @@
 .EXAMPLE
     .\Sync-Directories.ps1 -SourcePath "C:\Data" -DestinationPath "D:\Sync\Save"
 
-    Synchronises the contents of C:\Data to D:\Sync\Save. 
+    Synchronizes the contents of C:\Data to D:\Sync\Save. 
     Log data is saved to the script folder in a log file named after the source folder: Data_log.txt
 .EXAMPLE
     .\Sync-Directories.ps1 -SourcePath "C:\Data" -DestinationPath "D:\Sync\Save\Data"  -LogPath "C:\Sync\Log.txt" -Force
 
-    Synchronises the contents of C:\Data to D:\Sync\Save. If the destination folder does not exist it will be created. 
+    Synchronizes the contents of C:\Data to D:\Sync\Save. If the destination folder does not exist it will be created. 
     Saves the log data to C:\Sync\Log.txt.
 #>
 [CmdletBinding(SupportsShouldProcess = $true, PositionalBinding = $false, ConfirmImpact = 'Medium')]
