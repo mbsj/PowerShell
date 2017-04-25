@@ -1,7 +1,5 @@
 $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "Set-LogonWallpaper.ps1"
 
-$regKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Background"
-$oemPath = "C:\Windows\System32\oobe\info\backgrounds"
 $imagePath = "TestDrive:\wallpaper.png"
 
 Describe "Set-LogonWallpaper" {
