@@ -1,11 +1,11 @@
 ﻿<#
 .SYNOPSIS
-    Starts a clenaup of the WSUS service on the default WSUS server
+    Starts a cleanup of the WSUS service on the default WSUS server
 .DESCRIPTION
     Runs locally on the WSUS server or on a client with WSUS admin tools installed 
     and triggers a cleanup job based on the configuration provided. 
 
-    Possible cleanups to run are one or more of the floowing: 
+    Possible cleanups to run are one or more of the following: 
         CleanupObsoleteComputers
         CleanupObsoleteUpdates
         CleanupUnneededContentFiles
@@ -64,10 +64,10 @@ process {
     }
 
     if ($pscmdlet.ShouldProcess("WSUS service", "Run cleanup")) {
-        $cleanupManager = $wsus.GetCleanupManager(); 
-        $cleanupManager.PerformCleanup($cleanupScope); 
+        $cleanupManager = $wsus.GetCleanupManager();
+        $cleanupManager.PerformCleanup($cleanupScope);
     }
 }
-    
+
 end {
 }
