@@ -65,58 +65,22 @@ function Get-Password() {
 
 <#
 .Synopsis
-   Signes a PowerShell script
+   Suspends execution of the screen server and time lock
 .DESCRIPTION
-   Signs the script provied with a valid code signing certificate. 
+   When executed, starts a loop which sends a a keystroke to the session to prevent the screensaver
+   from starting as well as session locks and other triggers based on inactive time. 
+   Default loop delay is 60 seconds.
 
-   If only one certificate exsists, the script will be signed with that. 
-   If more that one exists, the user will be prompted to select a certificate. 
+   The loop continues until the execution is interrupted, i.e. using Ctrl+C or closing the PowerShell window.
 .EXAMPLE
-   Set-ScriptCertificate -ScriptPath C:\Temp\Get-Output.ps1
+   Suspend-ScreenSaver
 
-   Signs the script C:\Temp\Get-Output.ps1
+   Starts a suspension loop with the default 60 second delay.
+.EXAMPLE
+   Suspend-ScreenSaver -Delay 5
+
+   Starts a suspension loop but triggers the keystroke every 5 seconds.
 #>
-function Set-ScriptCertificate {
-    [CmdletBinding(ConfirmImpact = 'Low', SupportsShouldProcess = $true)]
-    param (
-        # The path to the script which should be signed
-        [Parameter(Mandatory = $true)]
-        [String]$ScriptPath
-    )
-
-    $codeSigningCerts = @()
-    $codeSigningCerts += Get-ChildItem Cert:\CurrentUser\My\ -CodeSigningCert
-    $codeSigningCerts += Get-ChildItem Cert:\LocalMachine\TrustedPublisher\ -CodeSigningCert
-    $cert = $null
-
-    if ($codeSigningCerts.Count -lt 1) {
-        Write-Error "No code signing certificates found. At least one is required." -ForegroundColor Red
-        return
-    }
-    elseif ($codeSigningCerts.Count -gt 1) {
-        Write-Warning "More than one certificate found. Please select one:" -ForegroundColor Green
-
-        for ($i = 0; $i -lt $codeSigningCerts.Count; $i++) {
-            Write-Output -InputObject (($i + 1) + " - SUBJECT:" + $codeSigningCerts[$i].Subject + "`tSERIAL NUMBER:" + $codeSigningCerts[$i].SerialNumber)
-        }
-
-        $selected = -1 
-        do {
-            $selected = Read-Host "Please select one" 
-        } until ($selected -match "^[0-9]*$" -and $selected -le $codeSigningCerts.Count -and $selected -gt 0)
-
-        $cert = $codeSigningCerts[$selected - 1]
-    }
-    else {
-        $cert = $codeSigningCerts[0]
-    }
-
-    if ($pscmdlet.ShouldProcess("$ScriptPath", "Signing with $cert")) {
-        Set-AuthenticodeSignature -Certificate $cert -FilePath $ScriptPath
-    }
-}
-
-
 function Suspend-ScreenSaver {
     [CmdletBinding(ConfirmImpact = 'Low')]
     param(
@@ -133,29 +97,22 @@ function Suspend-ScreenSaver {
     }
 }
 
-function Get-PasswordSecureString {
-    [CmdletBinding(ConfirmImpact = 'Low')]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingConvertToSecureStringWithPlainText", "")]
-    param(
-        [Parameter(Mandatory = $true, Position = 0)]
-        [String]$PlainTextPassword
-    )
+<#
+.Synopsis
+   Gets a PSCredential object with the setup test credentials
+.DESCRIPTION
+   Gets a PSCredential object with the setup test credentials
+.EXAMPLE
+   $creds = Get-TestCredential
 
-    $Password | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
-}
-
+   Gets the default test credentials and saves in the $creds variable
+#>
 function Get-TestCredential {
     [CmdletBinding(ConfirmImpact = 'Low')]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingConvertToSecureStringWithPlainText", "")]
     param()
 
-    New-Object System.Management.Automation.PSCredential (“Administrator”, (ConvertTo-SecureString "9VBatteryEel" -AsPlainText -Force))
+    $passwordSecureString = "01000000d08c9ddf0115d1118c7a00c04fc297eb01000000bedb5723bcf0a548b619ca968df80ece0000000002000000000003660000c000000010000000985f7ff40ccae1b4385ecd7d11935fb40000000004800000a000000010000000fc3db66bc3d96f1e528a982f2ce5e0b520000000f71fa436fc15dae8bff1d5dc4d12c059591c394a19729b1cbd3cd1d4474a7683140000000f1a66d0504492b58a0b741e45e69ee5e4430942"
+
+    New-Object System.Management.Automation.PSCredential (“Administrator”, ($passwordSecureString | ConvertTo-SecureString))
 }
-
-$STSMySQL = New-Object psobject
-$STSMySQL | Add-Member -MemberType NoteProperty -Name Host -Value "172.30.211.156"
-$STSMySQL | Add-Member -MemberType NoteProperty -Name Username -Value "z8mvj"
-$STSMySQL | Add-Member -MemberType NoteProperty -Name Password -Value "jCXNg4y5x6"
-
-Export-ModuleMember -Function * -Variable *
