@@ -29,8 +29,8 @@ process {
     Set-ItemProperty -Path $regKey -Name "OEMBackground" -Value 1 -Force -WhatIf:$WhatIfPreference
     #New-ItemProperty -Path $regKey -Name "OEMBackground" -Value 1 -PropertyType DWord -Force -WhatIf:$WhatIfPreference
 
-    if ($Force -and (Test-Path $oemPath)) {
-        Remove-Item -Path $oemPath -Recurse -Force
+    if ($Force) {
+        Remove-Item -Path $oemPath -Recurse -Force -ErrorAction SilentlyContinue
     }
 
     if (-not (Test-Path $oemPath) -or $Force) {
