@@ -71,7 +71,8 @@ function Get-Password() {
    from starting as well as session locks and other triggers based on inactive time. 
    Default loop delay is 60 seconds.
 
-   The loop continues until the execution is interrupted, i.e. using Ctrl+C or closing the PowerShell window.
+   The loop continues until the execution is interrupted, i.e. using Ctrl+C or closing the PowerShell window, 
+   or until the timeout period expires, if specified.
 .EXAMPLE
    Suspend-ScreenSaver
 
@@ -80,13 +81,32 @@ function Get-Password() {
    Suspend-ScreenSaver -Delay 5
 
    Starts a suspension loop but triggers the keystroke every 5 seconds.
+.EXAMPLE
+   Suspend-ScreenSaver -TimeOut 60
+
+   Starts a suspension loop with the default 60 second delay.
+   After the timeout period of 60 minutes have passed, the function will exit.
 #>
 function Suspend-ScreenSaver {
     [CmdletBinding(ConfirmImpact = 'Low')]
     param(
+        # Time to wait between each keystroke
         [Parameter(Position = 0)]
-        [int]$Delay = 60
+        [ValidateScript({$_ -gt 0})]
+        [int]$Delay = 60,
+
+        # Duration in minutes for the loop to run
+        [Parameter(Position = 1)]
+        [ValidateScript({$_ -gt 0})]
+        [double]$TimeOut
     )
+
+    $startTime = Get-Date
+    $endTime = $null
+
+    if ($TimeOut) {
+        $endTime = $startTime.AddMinutes($TimeOut)
+    }
 
     $wscriptShell = New-Object -COM "WScript.Shell"
 
@@ -94,6 +114,10 @@ function Suspend-ScreenSaver {
         $wscriptShell.SendKeys("{F15}")
 
         Start-Sleep -Seconds $Delay
+
+        if ($TimeOut -and $endTime -lt (Get-Date)) {
+            return
+        }
     }
 }
 
