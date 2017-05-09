@@ -65,11 +65,7 @@ function Get-StaleDomainAdmin {
 
         # A list of SamAccountName which should not be disabled
         [Parameter(Position = 2)]
-        [String[]]$SpecialAccounts = @("Administrator", "Guest"),
-
-        # Path to log file
-        [Parameter(Position = 3)]
-        [String]$LogPath = ".\Disable-StaleDomainAdmins.log"
+        [String[]]$SpecialAccounts = @("Administrator", "Guest")
     )
 
     Begin {
