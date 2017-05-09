@@ -90,12 +90,12 @@ function Get-StaleDomainAdmin {
             if ($lastLogonFileTime) {
                 $lastLogonTime = [DateTime]::FromFileTime($lastLogonFileTime)
 
-                if ($lastLogonTime -lt (Get-Date).AddYears(-1) -and $_.Enabled) {
+                if ($lastLogonTime -lt $MaxAge -and $_.Enabled) {
                     $_ | Select-Object -Property DistinguishedName, Name, SamAccountName, @{Name = "LastLogonTime"; Expression = {$lastLogonTime}}, @{Name = "CreatedTime"; Expression = {$whenCreatedTime}}
                 }
             }
             else {
-                if ($whenCreatedTime -and $whenCreatedTime -gt [DateTime]::MinValue -and $whenCreatedTime -lt (Get-Date).AddYears(-1)) {
+                if ($whenCreatedTime -and $whenCreatedTime -gt [DateTime]::MinValue -and $whenCreatedTime -lt $MaxAge) {
                     $_ | Select-Object -Property DistinguishedName, Name, SamAccountName, @{Name = "LastLogonTime"; Expression = {}}, @{Name = "CreatedTime"; Expression = {$whenCreatedTime}}
                 }
             }
