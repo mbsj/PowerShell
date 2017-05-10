@@ -25,8 +25,8 @@ function Test-ADAuthentication {
         [String]$PlainTextPassword
     )
 
-    $dirEntry = New-Object directoryservices.directoryentry "", $Username, $Password
-    $dirEntry.psbase.name -ne $null
+    $dirEntry = New-Object DirectoryServices.DirectoryEntry "", $Username, $Password
+    $null -ne $dirEntry.psBase.Name
 }
 
 <#

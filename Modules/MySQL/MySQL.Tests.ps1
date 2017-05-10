@@ -13,7 +13,7 @@ InModuleScope MySQL {
             }
             else {
                 It "Should throw a connection error" {
-                    { Invoke-MySQL -Query "SELECT" -Server "NonServer" -Database "NonDB" -Username "User" -PlainTextPassword "%`$l:({:qEypw}jC0GLg5`"Ev3L_0\u}" -Timeout 2 } | Should Throw "Unable to connect to any of the specified MySQL hosts."
+                    { Invoke-MySQL -Query "SELECT" -Server "NonServer" -Database "NonDB" -Username "User" -PlainTextPassword "%`$l:({:qe,pw}jC0GLg5`"Ev3L_0\u}" -Timeout 2 } | Should Throw "Unable to connect to any of the specified MySQL hosts."
                 }
             }
         }

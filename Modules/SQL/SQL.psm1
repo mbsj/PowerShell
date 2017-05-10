@@ -1,8 +1,8 @@
 ﻿<#
 .Synopsis
-   Invokes a SQL query agains a specified database
+   Invokes a SQL query against a specified database
 .DESCRIPTION
-   Invokes one or more queries agains a specified SQL database. Result set is loaded into data table rows and returned directly. 
+   Invokes one or more queries against a specified SQL database. Result set is loaded into data table rows and returned directly. 
 .EXAMPLE
    .\Invoke-SQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB
 
@@ -19,9 +19,9 @@
 .EXAMPLE
    $queries | .\Invoke-SQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB
 
-   $queries is an array of several query strings. One connection is made after which each query is invoked agains the server as in the first example. 
+   $queries is an array of several query strings. One connection is made after which each query is invoked against the server as in the first example. 
 .NOTES
-    Be cautious when executing multiple queries agains different tables. As each table will return different properies, these may be hidden when using i.e. Format-Table to format output. 
+    Be cautious when executing multiple queries against different tables. As each table will return different properties, these may be hidden when using i.e. Format-Table to format output. 
     The formating cmdlet will use the first objects to define the properties to show, and so will not show properties for rows returned later in the result set. 
 #>
 function Invoke-SQL {

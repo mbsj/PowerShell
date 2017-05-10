@@ -3,7 +3,7 @@
     Sets the logon wallpaper on Windows 7
 .DESCRIPTION
     Sets a logon wallpaper on Windows 7 be exploiting the "Out Of Box Experience".
-    Sets the registry key for OEM background and places the specified image file in the OOBE backgrounds folder.
+    Sets the registry key for OEM background and places the specified image file in the out of box experience backgrounds folder.
 .EXAMPLE
     .\Set-LogonWallpaper.ps1 -ImagePath
 #>

@@ -46,7 +46,7 @@ Param
     [ValidateScript({-not ($_ -match "\.")})]
     [String]$DomainLabel,
 
-    # If the user exists, check whether the user has full control to the folder. Impled when using "-GiveFullControl"
+    # If the user exists, check whether the user has full control to the folder. Implied when using "-GiveFullControl"
     [Switch]$CheckFullControl,
 
     # If the user exists, check whether the user has full control to the folder and if not, give the user "Full Control" access. Implies "-CheckFullControl"
@@ -146,7 +146,7 @@ Process
                             
                             if (-not $aclError) {
                                 Write-Verbose "User $userName was given full access to folder."
-                                $homeFolderCheck.UserHasFullaccess = $true
+                                $homeFolderCheck.UserHasFullAccess = $true
                                 $homeFolderCheck.UserGivenFullAccess = $true
                             }
                         }

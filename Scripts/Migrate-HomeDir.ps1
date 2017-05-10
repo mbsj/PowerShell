@@ -18,7 +18,7 @@ function Get-OneDrivePath {
     }
 }
 
-function Test-OneDriveRunnig {
+function Test-OneDriveRunning {
     try {
         Get-Process -Name GROOVE -ErrorAction Stop
         return $true

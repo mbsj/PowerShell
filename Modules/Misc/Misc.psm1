@@ -108,10 +108,10 @@ function Suspend-ScreenSaver {
         $endTime = $startTime.AddMinutes($TimeOut)
     }
 
-    $wscriptShell = New-Object -COM "WScript.Shell"
+    $wScriptShell = New-Object -COM "WScript.Shell"
 
     while ($true) {
-        $wscriptShell.SendKeys("{F15}")
+        $wScriptShell.SendKeys("{F15}")
 
         Start-Sleep -Seconds $Delay
 
@@ -127,9 +127,9 @@ function Suspend-ScreenSaver {
 .DESCRIPTION
    Gets a PSCredential object with the setup test credentials
 .EXAMPLE
-   $creds = Get-TestCredential
+   $credentials = Get-TestCredential
 
-   Gets the default test credentials and saves in the $creds variable
+   Gets the default test credentials and saves in the $credentials variable
 #>
 function Get-TestCredential {
     [CmdletBinding(ConfirmImpact = 'Low')]

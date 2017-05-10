@@ -2,7 +2,7 @@
 .SYNOPSIS
     Gets any users and groups as well as their access rights on a given file or folder. 
 .DESCRIPTION
-    Checks the file or folder ACLs and returns an object for each user, describing their access. 
+    Checks the file or folder access control lists and returns an object for each user, describing their access. 
     This returns objects for both users and groups. 
     The switch -ResolveGroups will make the script resolve any groups, and get the users in them. If groups contains groups, they will be resolved recursively. 
     The -AccountType parameter can be used to limit the access check to either local or domain users or both. Default is Domain.
@@ -13,13 +13,13 @@
 .EXAMPLE
     .\Get-AccessRights.ps1 -Path C:\Temp -ResolveGroups | Select-Object -Property UserName,AccessControlType,FileSystemRights
 
-    Geths the access right for the path C:\Temp, resolving any and all groups in the process. 
-    Output is limited to only the user names, access control trypes and associated rights. 
+    Gets the access right for the path C:\Temp, resolving any and all groups in the process. 
+    Output is limited to only the user names, access control types and associated rights. 
     This could then be pipet to i.e. Out-File to save a text file. 
 .EXAMPLE
     .\Get-AccessRights.ps1 -Path C:\Temp -ResolveGroups -AccountType Local
     
-    Gets the access rights for the path C:\Temp, resolving any annd all groups on the process. 
+    Gets the access rights for the path C:\Temp, resolving any and all groups on the process. 
     Also limits the check to only handle local user accounts, ignoring domain accounts. 
 .EXAMPLE
     $paths = @(".\File1","C:\Temp")
@@ -151,26 +151,26 @@ process {
 
 end {
     Write-Verbose "Returning results"
-    $userACLs = @()
-    $userACLs += $directoryEntries | Select-Object -Property @{Name="Path"; Expression={$_.WinPath}},
+    $userACL = @()
+    $userACL += $directoryEntries | Select-Object -Property @{Name="Path"; Expression={$_.WinPath}},
                                                 @{Name="Domain"; Expression={($_.DistinguishedName -split "," | Where-Object { $_ -match "^DC=" }) -replace "DC=","" -join "."}},
                                                 @{Name="UserName"; Expression={$_.SAMAccountName}},
                                                 @{Name="DisplayName"; Expression={$_.DisplayName}},
                                                 @{Name="AccessControlType"; Expression={$_.Access.AccessControlType}},
                                                 @{Name="FileSystemRights"; Expression={$_.Access.FileSystemRights}}
                                                 
-    $userACLs += $localEntries | Select-Object -Property @{Name="Path"; Expression={$_.WinPath}},
+    $userACL += $localEntries | Select-Object -Property @{Name="Path"; Expression={$_.WinPath}},
                                             @{Name="Domain"; Expression={$env:COMPUTERNAME}},
                                             @{Name="UserName"; Expression={$_.Name}},
                                             @{Name="DisplayName"; Expression={""}},
                                             @{Name="AccessControlType"; Expression={$_.Access.AccessControlType}},
                                             @{Name="FileSystemRights"; Expression={$_.Access.FileSystemRights}}
     
-    $userACLs | ForEach-Object {
+    $userACL | ForEach-Object {
         if (-not ($_.UserName)) {
             $_.UserName = "SYSTEM" 
         }
     }
 
-    $userACLs | Sort-Object -Property Path,Domain,UserName
+    $userACL | Sort-Object -Property Path,Domain,UserName
 }

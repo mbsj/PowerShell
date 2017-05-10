@@ -56,7 +56,7 @@ function Invoke-MySQL {
     )
     
     begin {
-        if ([System.Reflection.Assembly]::LoadWithPartialName("MySql.Data") -eq $null) {
+        if ($null -eq [System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")) {
             throw "Unable to load assembly MySql.Data. Verify MySQL .NET connector is installed: https://dev.mysql.com/downloads/connector/net/"
         }
 

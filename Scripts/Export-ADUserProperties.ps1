@@ -23,7 +23,7 @@
 .EXAMPLE
    .\Export-ADUserProperties.ps1 -LDAPPath "LDAP://OU=Users,DC=domain,DC=local" -Properties "samaccountname","displayname","accountexpires"
 
-   List all users in the OU "Users" and get custom properties that list the user name, display name and when the account expries.
+   List all users in the OU "Users" and get custom properties that list the user name, display name and when the account expires.
    Exports to a CSV file at the chosen path.
 .INPUTS
    System.String
@@ -52,7 +52,7 @@ Param
     [ValidateNotNullOrEmpty()]
     [String[]]$Properties = @("samaccountname", "givenname", "sn", "mail", "homephone", "mobile"),
 
-    # Delimeter used to seperate values in the CSV file.
+    # Delimiter used to separate values in the CSV file.
     [ValidateNotNullOrEmpty()]
     [String]$CSVDelimiter = ",",
 

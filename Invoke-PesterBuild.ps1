@@ -7,9 +7,7 @@ $ErrorActionPreference = "Stop"
 $modulePath = Join-Path $TempDir Pester-master\Pester.psm1
  
 if (-not(Test-Path $modulePath)) {
- 
-    # Note: PSGet and chocolatey are not supported in hosted vsts build agent  
-    $tempFile = Join-Path $TempDir pester.zip
+     $tempFile = Join-Path $TempDir pester.zip
     Invoke-WebRequest https://github.com/pester/Pester/archive/master.zip -OutFile $tempFile
  
     [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
