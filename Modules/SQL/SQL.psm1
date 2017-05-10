@@ -25,48 +25,47 @@
     The formating cmdlet will use the first objects to define the properties to show, and so will not show properties for rows returned later in the result set. 
 #>
 function Invoke-SQL {
-    [CmdletBinding(DefaultParameterSetName='Trusted Connection',
-                    SupportsShouldProcess=$true, 
-                    PositionalBinding=$false,
-                    ConfirmImpact='Medium')]
+    [CmdletBinding(DefaultParameterSetName = 'Trusted Connection',
+        SupportsShouldProcess = $true, 
+        PositionalBinding = $false,
+        ConfirmImpact = 'Medium')]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingUserNameAndPassWordParams", "")]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
     [OutputType([System.Data.DataRow])]
     Param
     (
         # Query to be executed
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position=0, ParameterSetName='Trusted Connection')]
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position=0, ParameterSetName='Standard Security')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0, ParameterSetName = 'Trusted Connection')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0, ParameterSetName = 'Standard Security')]
         [ValidateNotNullOrEmpty()]
         [String]$Query,
 
         # Server to connect to
-        [Parameter(Mandatory=$true, Position=1, ParameterSetName='Trusted Connection')]
-        [Parameter(Mandatory=$true, Position=1, ParameterSetName='Standard Security')]
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Trusted Connection')]
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Standard Security')]
         [String]$Server,
 
         # Database to query
-        [Parameter(Mandatory=$true, Position=2, ParameterSetName='Trusted Connection')]
-        [Parameter(Mandatory=$true, Position=2, ParameterSetName='Standard Security')]
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Trusted Connection')]
+        [Parameter(Mandatory = $true, Position = 2, ParameterSetName = 'Standard Security')]
         [String]$Database,
 
         # Timeout for the query
-        [Parameter(Position=3, ParameterSetName='Trusted Connection')]
-        [Parameter(Position=3, ParameterSetName='Standard Security')]
-        [ValidateScript({$_ -gt 0})]
+        [Parameter(Position = 3, ParameterSetName = 'Trusted Connection')]
+        [Parameter(Position = 3, ParameterSetName = 'Standard Security')]
+        [ValidateScript( {$_ -gt 0})]
         [Int]$Timeout = 10,
 
         # Username used to authenticate with the server
-        [Parameter(Mandatory=$true, ParameterSetName='Standard Security')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Standard Security')]
         [String]$Username,
 
         # Password used to authenticate with the server
-        [Parameter(Mandatory=$true, ParameterSetName='Standard Security')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Standard Security')]
         [String]$PlainTextPassword
     )
 
-    Begin
-    {
+    Begin {
         $connectionString = switch ($pscmdlet.ParameterSetName) {
             "Trusted Connection" { "Server=$Server;Database=$Database;Trusted_Connection=True;" }
             "Standard Security" { "Server=$Server;Database=$Database;User Id=$Username;Password=$Password;" }
@@ -78,8 +77,7 @@ function Invoke-SQL {
         $connection.Open()
         Write-Verbose "Connected to $Server"
     }
-    Process
-    {
+    Process {
         $command = New-Object System.Data.SqlClient.SqlCommand($Query, $connection)
         $command.CommandTimeout = $Timeout
         
@@ -87,8 +85,7 @@ function Invoke-SQL {
 
         Write-Verbose "Executing query $Query"
 
-        if ($pscmdlet.ShouldProcess("$Server\$Database", "Query"))
-        {
+        if ($pscmdlet.ShouldProcess("$Server\$Database", "Query")) {
             $reader = $command.ExecuteReader()
             $dataTable.Load($reader)
         }
@@ -96,8 +93,7 @@ function Invoke-SQL {
         Write-Verbose "Returned $($dataTable.Rows.Count) rows"
         $dataTable.Rows
     }
-    End
-    {
+    End {
         $connection.Close();
         Write-Verbose "Closed connection to $Server"
     }
