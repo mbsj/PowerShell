@@ -20,14 +20,14 @@ Get-ChildItem $homePath | Where-Object { $_.PSIsContainer } | ForEach-Object {
     $userName = $_.Name
 
     if (-not ($persons | Where-Object { $_.Properties["sAMAccountName"] -eq $userName })) {
-        Write-Host -ForegroundColor Yellow "$userName not found in AD"
+        Write-Warning "$userName not found in AD"
     } else {
         $acl = Get-Acl $_.FullName 
 
         $access = $acl | Where-Object { $_.Access.IdentityReference.Value -eq "$domainName\$userName" }
 
         if ($access.FileSystemRights -ne "FullControl") {
-            Write-Host -ForegroundColor Yellow "$userName does not have full control of folder"
+            Write-Warning "$userName does not have full control of folder"
 
             if ($giveAccess) {
                 $inheritance = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit, [System.Security.AccessControl.InheritanceFlags]::ObjectInherit

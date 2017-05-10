@@ -49,7 +49,7 @@ Param (
 )
 
 begin {
-    function Get-DomainGroupMembers {
+    function Get-DomainGroupMember {
         param(
             [Parameter(Mandatory=$true)]
             [ValidateNotNull()]
@@ -62,7 +62,7 @@ begin {
                 $dirEntry = New-Object adsi "LDAP://$member"
 
                 if ($dirEntry.SchemaClassName -eq "group") {
-                    $dirEntry = Get-DomainGroupMembers -Group $dirEntry
+                    $dirEntry = Get-DomainGroupMember -Group $dirEntry
                 }
 
                 $dirEntry
@@ -74,7 +74,7 @@ begin {
         }
     }
 
-    function Get-LocalGroupMembers {
+    function Get-LocalGroupMember {
         param(
             [Parameter(Mandatory=$true)]
             [ValidateNotNull()]
@@ -87,7 +87,7 @@ begin {
                 $dirEntry = New-Object adsi $member
 
                 if ($dirEntry.SchemaClassName -eq "Group") {
-                    $dirEntry = Get-LocalGroupMembers -Group $dirEntry
+                    $dirEntry = Get-LocalGroupMember -Group $dirEntry
                 }
 
                 $dirEntry
@@ -130,7 +130,7 @@ process {
                 Write-Verbose "Adding domain entry for $($domainEntry.Name)"
                 $directoryEntries += $domainEntry | Select-Object -Property $domainEntryProperties
             } elseif ($domainEntry.SchemaClassName -eq "group" -and $ResolveGroups) {
-                $groupMembers = Get-DomainGroupMembers -Group $domainEntry
+                $groupMembers = Get-DomainGroupMember -Group $domainEntry
                 Write-Verbose "Adding domain entries for $(($groupMembers | Measure-Object).Count) group members"
                 $directoryEntries += $groupMembers | Select-Object -Property $domainEntryProperties
             }
@@ -141,7 +141,7 @@ process {
                 Write-Verbose "Adding local entry for $($localEntry.Name)"
                 $localEntries += $localEntry | Select-Object -Property $localEntryProperties
             } elseif ($localEntry.SchemaClassName -eq "Group" -and $ResolveGroups) {
-                $groupMembers = Get-LocalGroupMembers -Group $localEntry
+                $groupMembers = Get-LocalGroupMember -Group $localEntry
                 Write-Verbose "Adding local entries for $(($groupMembers | Measure-Object).Count) group members"
                 $localEntries += $groupMembers | Select-Object -Property $localEntryProperties
             } 
