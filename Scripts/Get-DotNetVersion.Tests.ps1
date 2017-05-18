@@ -2515,23 +2515,11 @@ Describe "Get-DotNetVersion" {
 
     Mock Get-ChildItem {
         Import-Clixml -Path TestDrive:\DotNetInfo.xml
-    } -ParameterFilter {
-        $Path -and $Path -eq 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -and $Recurse
     }
 
     Mock Test-Connection {
         $true
     }
-
-    $versions = @(
-        "2.0.50727.5420",
-        "3.0.30729.5420",
-        "3.0.4506.5420",
-        "3.0.6920.5011",
-        "3.5.30729.5420",
-        "4.0.0.0",
-        "4.6.01055"
-    )
 
     Context "Local" {
         It "Should run without error" {
@@ -2543,15 +2531,31 @@ Describe "Get-DotNetVersion" {
         }
 
         $info = & $scriptFile
-        It "Should return 8 versions" {
-            $info | Measure-object | Select-Object -ExpandProperty Count | Should Be 8
+
+        $propertyNames = @(
+            "Name",
+            "Version",
+            "Release"
+        )
+        $propertyNames | ForEach-Object {
+            It "Should contain property $_" {
+                foreach ($i in $info) {
+                    $i | Get-Member -MemberType NoteProperty | Where-Object Name -eq "$_" | Select-Object -ExpandProperty Name | Should Be $_
+                }
+            }
         }
 
         Write-Verbose ($info | Out-String)
 
-        $versions |ForEach-Object {
-            It "Should contain version $_" {
-                $info | Where-Object Version -eq $_ | Should Not BeNullOrEmpty
+        It "Property `"Name`" should never be empty" {
+            $info | ForEach-Object {
+                $_.Name | Should Not BeNullOrEmpty
+            }
+        }
+
+        It "Property `"Version`" should never be empty" {
+            $info | ForEach-Object {
+                $_.Version | Should Not BeNullOrEmpty
             }
         }
     }
