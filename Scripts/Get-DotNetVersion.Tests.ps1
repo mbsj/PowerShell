@@ -1,5 +1,5 @@
 $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "Get-DotNetVersion.ps1"
-$VerbosePreference = "Continue"
+
 $dotNetXML = @"
 <Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
   <Obj RefId="0">
@@ -2544,8 +2544,6 @@ Describe "Get-DotNetVersion" {
                 }
             }
         }
-
-        Write-Verbose ($info | Out-String)
 
         It "Property `"Name`" should never be empty" {
             $info | ForEach-Object {
