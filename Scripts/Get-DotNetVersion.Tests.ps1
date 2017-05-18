@@ -2510,16 +2510,6 @@ $dotNetXML = @"
 </Objs>
 "@
 
-$versions = @(
-    "2.0.50727.5420",
-    "3.0.30729.5420",
-    "3.0.4506.5420",
-    "3.0.6920.5011",
-    "3.5.30729.5420",
-    "4.0.0.0",
-    "4.6.01055"
-)
-
 Describe "Get-DotNetVersion" {
     $dotNetXml | Out-File -FilePath TestDrive:\DotNetInfo.xml
 
@@ -2532,6 +2522,16 @@ Describe "Get-DotNetVersion" {
     Mock Test-Connection {
         $true
     }
+
+    $versions = @(
+        "2.0.50727.5420",
+        "3.0.30729.5420",
+        "3.0.4506.5420",
+        "3.0.6920.5011",
+        "3.5.30729.5420",
+        "4.0.0.0",
+        "4.6.01055"
+    )
 
     Context "Local" {
         It "Should run without error" {
@@ -2546,6 +2546,8 @@ Describe "Get-DotNetVersion" {
         It "Should return 8 versions" {
             $info | Measure-object | Select-Object -ExpandProperty Count | Should Be 8
         }
+
+        Write-Verbose ($info | Out-String)
 
         $versions |ForEach-Object {
             It "Should contain version $_" {
@@ -2599,7 +2601,7 @@ Describe "Get-DotNetVersion" {
         It "Calls Invoke-Comand on remote server with credentials and custom port" {
             Assert-MockCalled Invoke-Command -Exactly 2 -ParameterFilter {
                 $ComputerName -and $ComputerName -eq "server1" -and 
-                $Credential -and $null -ne $Credential -and
+                $Credential -and $null -ne $Credential -and 
                 $Port -and $Port -eq 80
             }
         }
