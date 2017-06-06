@@ -12,7 +12,7 @@
     
     .\Merge-ADGroups.ps1 -SourceOU $sourceOU -DestinationGroup $destinationGroup -SourceGroupFilter $filter
 
-    Assume three groups exist in domain.local/Users/Suppoert: 
+    Assume three groups exist in domain.local/Users/Support: 
         1stLevel
         2ndLevel
         AllSupporters
@@ -41,10 +41,6 @@ param(
 )
 
 begin {
-    $OldGroupsOU_LDAP = "LDAP://OU=Test,OU=KMD,OU=Brugere,OU=Butik,DC=triostaging,DC=local"
-    $NewGroupLDAP = "LDAP://CN=ASD,OU=Test,OU=KMD,OU=Brugere,OU=Butik,DC=triostaging,DC=local"
-    $OldGroupsFilter = "Test*"
-
     $newGroup = New-Object System.DirectoryServices.DirectoryEntry($DestinationGroup)
     $oldGroupsOU = New-Object System.DirectoryServices.DirectoryEntry($SourceOU)
     $searcher = New-Object System.DirectoryServices.DirectorySearcher($oldGroupsOU)
