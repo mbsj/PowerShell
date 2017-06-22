@@ -1,6 +1,6 @@
-$scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "Sync-Directories.ps1"
-
 Describe "Sync-Directories" {
+    $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "..\Sync-Directories.ps1"
+
     $testDriveRoot = "TestDrive:\SyncTest"
     $testDriveSource = Join-Path -Path $testDriveRoot -ChildPath "Source"
     $testDriveDestination = Join-Path -Path $testDriveRoot -ChildPath "Destination"

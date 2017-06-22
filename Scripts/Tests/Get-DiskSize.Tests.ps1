@@ -1,6 +1,7 @@
-$scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "Get-DiskSize.ps1"
+Describe "Get-DiskSize" {
+    $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "..\Get-DiskSize.ps1"
 
-$diskSizeXml = @"
+    $diskSizeXml = @"
 <Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
   <Obj RefId="0">
     <TN RefId="0">
@@ -86,7 +87,6 @@ $diskSizeXml = @"
 </Objs>
 "@
 
-Describe "Get-DiskSize" {
     $diskSizeXml | Out-File -FilePath TestDrive:\DiskSize.xml
 
     Mock Get-CimInstance {
@@ -107,7 +107,7 @@ Describe "Get-DiskSize" {
         $diskinfo = & $scriptFile -ComputerName "SERVER01"
         $diskinfo | Where-Object SystemName -ne "SERVER01" | Should BeNullOrEmpty
 
-        $diskinfo = & $scriptFile -ComputerName "SERVER01","SERVER02","SERVER03"
+        $diskinfo = & $scriptFile -ComputerName "SERVER01", "SERVER02", "SERVER03"
         $diskinfo | Select-Object -ExpandProperty SystemName -Unique | Measure-Object | Select-Object -ExpandProperty Count | Should Be 3
     }
 

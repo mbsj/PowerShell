@@ -1,8 +1,7 @@
-$scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "Set-LogonWallpaper.ps1"
-
-$imagePath = "TestDrive:\wallpaper.png"
-
 Describe "Set-LogonWallpaper" {
+    $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "..\Set-LogonWallpaper.ps1"
+    $imagePath = "TestDrive:\wallpaper.png"
+
     Mock Set-ItemProperty {}
     Mock Remove-Item {}
     Mock New-Item {}

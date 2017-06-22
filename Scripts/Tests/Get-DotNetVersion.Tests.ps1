@@ -1,6 +1,7 @@
-$scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "Get-DotNetVersion.ps1"
+Describe "Get-DotNetVersion" {
+    $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "..\Get-DotNetVersion.ps1"
 
-$dotNetXML = @"
+    $dotNetXML = @"
 <Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
   <Obj RefId="0">
     <TN RefId="0">
@@ -2510,7 +2511,6 @@ $dotNetXML = @"
 </Objs>
 "@
 
-Describe "Get-DotNetVersion" {
     $dotNetXml | Out-File -FilePath TestDrive:\DotNetInfo.xml
 
     Mock Get-ChildItem {

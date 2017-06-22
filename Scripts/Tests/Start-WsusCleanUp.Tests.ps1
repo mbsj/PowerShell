@@ -1,6 +1,6 @@
-$scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "Start-WsusCleanUp.ps1"
-
 Describe "Start-WsusCleanUp" {
+    $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "..\Start-WsusCleanUp.ps1"
+
     It "Should throw missing type" {
         $scriptRun = { & $scriptFile } 
             
