@@ -1,3 +1,6 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingComputerNameHardcoded', '')]
+param()
+
 Describe "Get-DiskSize" {
     $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "..\Get-DiskSize.ps1"
 

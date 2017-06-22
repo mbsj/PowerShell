@@ -1,3 +1,7 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingComputerNameHardcoded', '')]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '')]
+param()
+
 Describe "Get-DotNetVersion" {
     $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "..\Get-DotNetVersion.ps1"
 
