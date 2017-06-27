@@ -70,7 +70,7 @@ begin {
 
             $handledGroups += $Group.Path
         } else {
-            Write-Verbose "Ignoring all ready processed group $($Group.Name) with path $($Group.Path)"
+            Write-Verbose "Ignoring already processed group $($Group.Name) with path $($Group.Path)"
         }
     }
 
@@ -95,7 +95,7 @@ begin {
 
             $handledGroups += $Group.Path
         } else {
-            Write-Verbose "Ignoring all ready processed $($Group.Name) group with path $($Group.Path)"
+            Write-Verbose "Ignoring already processed $($Group.Name) group with path $($Group.Path)"
         }
     }
 
