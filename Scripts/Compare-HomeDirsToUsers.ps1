@@ -2,7 +2,7 @@
 .Synopsis
    Compare folders in homedir to actual users in AD. 
 .DESCRIPTION
-   Traverses a homedir folder and checks Active Directory for any user with the same name. If no user exists a warning is displayed. 
+   Traverses a homedir folder and checks Active Directory for any user with the same name. 
 
    Can also check if a user has access to his home folder and if not, provide "Full Control" access. 
 .EXAMPLE
