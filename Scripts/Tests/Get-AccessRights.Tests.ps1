@@ -31,16 +31,4 @@ Describe "Get-AccessRights" {
             $result | Where-Object UserName -eq $env:USERNAME | Should Not BeNullOrEmpty
         }
     }
-
-    Context "Resolving groups" {
-        It "Should run without error when resolving groups" {
-            { & $scriptFile -Path $testFolder -ResolveGroups -AccountType "Local" } | Should Not Throw
-        }
-
-        $result = ( & $scriptFile -Path $testFolder -ResolveGroups -AccountType "Local" )
-
-        It "Should contain at least 1 result" {
-            $result | Measure-Object | Select-Object -ExpandProperty Count | Should BeGreaterThan 0
-        }
-    }
 }
