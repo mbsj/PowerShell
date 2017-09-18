@@ -43,7 +43,7 @@ Param (
         
     # Specifies the path to the state file.
     [Parameter(Mandatory = $false, Position = 3)]
-    [ValidateScript( {Test-Path $_ -Type Leaf})]
+    [ValidateNotNullOrEmpty()]
     [String]$StatePath = ".\Search-File.index",
 
     # Specifies that if the number of lines in the file are equal to the number of lines read, the read count will not reset to 0. The read count will still reset to 0 i the number of lines are less than the number read. 
