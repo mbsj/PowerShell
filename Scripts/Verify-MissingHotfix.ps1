@@ -36,9 +36,8 @@
     String array with computer names
     Optional string array with hotfix IDs for baseline
 .OUTPUTS
-    Dictionary list with computer names in the key and any missing hotfix IDs in a string array in the value. 
+    Dictionary list with computer names in the key and any missing hotfix IDs in a string array in the value. If no missing hotfixes, the value array will be empty. 
     If the -ByHotfix parameter is used, the key will be hotfix IDs and the value will be the computernames where the hotfix is missing.
-    If no missing hotfixes, the value array will be empty. 
 #>
 [CmdletBinding(SupportsShouldProcess = $false, ConfirmImpact = 'Low')]
 Param (
@@ -79,9 +78,11 @@ process {
     $computerHotfixes = getHotfixes -computers $ComputerName
 
     if (-not $Baseline) {
+        Write-Verbose "No baseline supplied. Creating baseline from computers"
         $Baseline = $computerHotfixes | ForEach-Object { $_["HotfixIDs"] } | Select-Object -Unique
     }
 
+    Write-Verbose "Getting missing hotfixes from baseline: `r`n`t$($Baseline -join "`r`n`t")"
     $missingHotfixes = @{}
     foreach ($computerHotfix in $computerHotfixes) {
         $missing = $Baseline | Where-Object { $computerHotfix["HotfixIDs"] -notcontains $_ }
