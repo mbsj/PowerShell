@@ -41,12 +41,12 @@
 #>
 [CmdletBinding(SupportsShouldProcess = $false, ConfirmImpact = 'Low')]
 Param (
-    # Name of the computers the check
+    # Name of the computers to check
     [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
     [ValidateNotNullOrEmpty()]
     [String[]]$ComputerName,
         
-    # Hotfix IDs to compare to
+    # Hotfix IDs to compare is computers hotfix level against
     [Parameter(Mandatory = $false, Position = 1)]
     [ValidateNotNullOrEmpty()]
     [ValidatePattern("KB\d{1,7}")]
