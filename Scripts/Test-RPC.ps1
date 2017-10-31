@@ -1,3 +1,5 @@
+#Requires -Version 4
+
 <#
 .SYNOPSIS
     Tests the connection to the RPC endpoint mapper as well as all registered endpoints. 
@@ -33,8 +35,6 @@
 .LINK
 https://www.myotherpcisacloud.com/post/verifying-rpc-network-connectivity-like-a-boss
 #>
-
-#Requires -Version 4
 [CmdletBinding(SupportsShouldProcess = $false)]
 Param (
     # The name of the computers to check for RPC connection

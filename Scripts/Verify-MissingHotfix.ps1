@@ -1,4 +1,5 @@
 #Requires -Version 4
+
 <#
 .SYNOPSIS
     Verifies the installed hotfixes on servers from a baseline.
