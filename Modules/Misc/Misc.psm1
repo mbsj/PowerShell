@@ -58,7 +58,7 @@ function Get-Password() {
 
         $containsComplexChar = $false
         for ($l = 1; $l -le $Length; $l++) {
-            $randomCharIndex = Get-Random -Minimum 0 -Maximum $($char.Count -1)
+            $randomCharIndex = Get-Random -Minimum 0 -Maximum $($char.Count - 1)
 
             if ($randomCharIndex -gt 61) {
                 $containsComplexChar = $true
@@ -88,6 +88,8 @@ function Get-Password() {
 
    The loop continues until the execution is interrupted, i.e. using Ctrl+C or closing the PowerShell window, 
    or until the timeout period expires, if specified.
+
+   Uses the VBScript SendKeys method to send the interrupting key. See link for details. 
 .EXAMPLE
    Suspend-ScreenSaver
 
@@ -101,6 +103,10 @@ function Get-Password() {
 
    Starts a suspension loop with the default 60 second delay.
    After the timeout period of 60 minutes have passed, the function will exit.
+.NOTES
+    Sends one or more keys to the windows host. Designed to temporarily suspend the screen saver but could be used to interrupt anything else that can take periodic character input.
+.LINK
+    https://social.technet.microsoft.com/wiki/contents/articles/5169.vbscript-sendkeys-method.aspx
 #>
 function Suspend-ScreenSaver {
     [CmdletBinding(ConfirmImpact = 'Low')]
@@ -113,25 +119,46 @@ function Suspend-ScreenSaver {
         # Duration in minutes for the loop to run
         [Parameter(Position = 1)]
         [ValidateScript( {$_ -gt 0})]
-        [double]$TimeOut
+        [int]$TimeOut,
+
+        # The key which is sent to interrupt the screensaver. See link for details on what can be entered.
+        [Parameter(Position = 2)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Key = "{F15}"
     )
 
-    $startTime = Get-Date
-    $endTime = $null
-
-    if ($TimeOut) {
-        $endTime = $startTime.AddMinutes($TimeOut)
+    begin {
+        if ($TimeOut) {
+            if ($TimeOut * 60 -le $Delay) {
+                Write-Warning "The timeout duration is less than or equal to the delay duration. Script will execute once, after the delay of $Delay has expired, then exit."
+            }
+            elseif ($Timeout * 60 % $Delay -ne 0) {
+                Write-Warning "Delay cannot be evenly divided with timeout. The last delay will run for $($Delay - ($Timeout * 60 % $Delay)) seconds beyond the timeout."
+            }
+        }
     }
 
-    $wScriptShell = New-Object -COM "WScript.Shell"
+    process {
+        $endTime = $null
 
-    while ($true) {
-        $wScriptShell.SendKeys("{F15}")
+        if ($TimeOut) {
+            $endTime = (Get-Date).AddMinutes($TimeOut)
+            Write-Verbose "Start time: $(Get-Date)"
+            Write-Verbose "Timeout time: $endTime"
+        }
 
-        Start-Sleep -Seconds $Delay
+        $wScriptShell = New-Object -COM "WScript.Shell"
 
-        if ($TimeOut -and $endTime -lt (Get-Date)) {
-            return
+        while ($true) {
+            Write-Verbose "Sleeping for $Delay seconds"
+            Start-Sleep -Seconds $Delay
+            
+            $wScriptShell.SendKeys($Key)
+            Write-Verbose "Sent $Key"
+
+            if ($TimeOut -and $endTime -lt (Get-Date)) {
+                return
+            }
         }
     }
 }
