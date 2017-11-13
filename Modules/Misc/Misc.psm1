@@ -39,25 +39,40 @@ function Get-Password() {
 
     $passwords = @()
 
-    if ($Numeric) {
-        $chars = @("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
-    }
-    else {
-        $chars = @("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+    $char = 48..57 | ForEach-Object { [char]$_ }
+
+    if (-not $Numeric) {
+        $char += 65..90 | ForEach-Object { [char]$_ }
+        $char += 97..122 | ForEach-Object { [char]$_ }
     }
 
     if ($Complex) {
-        $chars += @("!", "`"", "#", "$", "%", "&", "`'", "`(", "`)", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "\", "]", "^", "_", "``", "{", "|", "}", "~")
+        $char += 33..47 | ForEach-Object { [char]$_ } 
+        $char += 58..64 | ForEach-Object { [char]$_ } 
+        $char += 91..96 | ForEach-Object { [char]$_ } 
+        $char += 123..126 | ForEach-Object { [char]$_ }
     }
 
     for ($c = 1; $c -le $Count; $c++) {
-        $password = ""
+        $password = [String]::Empty
 
+        $containsComplexChar = $false
         for ($l = 1; $l -le $Length; $l++) {
-            $password += ($chars | Get-Random)
+            $randomCharIndex = Get-Random -Minimum 0 -Maximum $($char.Count -1)
+
+            if ($randomCharIndex -gt 61) {
+                $containsComplexChar = $true
+            }
+
+            $password += $char[$randomCharIndex]
         }
 
-        $passwords += $password
+        if ($Complex -and -not $containsComplexChar) {
+            $c--
+        }
+        else {
+            $passwords += $password
+        }
     }
 
     return $passwords
@@ -92,12 +107,12 @@ function Suspend-ScreenSaver {
     param(
         # Time to wait between each keystroke
         [Parameter(Position = 0)]
-        [ValidateScript({$_ -gt 0})]
+        [ValidateScript( {$_ -gt 0})]
         [int]$Delay = 60,
 
         # Duration in minutes for the loop to run
         [Parameter(Position = 1)]
-        [ValidateScript({$_ -gt 0})]
+        [ValidateScript( {$_ -gt 0})]
         [double]$TimeOut
     )
 
