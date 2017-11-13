@@ -1,5 +1,6 @@
 @{
     IncludeRules = @(
+        "PSAlignAssignmentStatement",
         "PSAvoidDefaultValueForMandatoryParameter",
         "PSAvoidDefaultValueSwitchParameter",
         "PSAvoidGlobalAliases",
@@ -47,6 +48,7 @@
         "PSUsePSCredentialType",
         "PSUseShouldProcessForStateChangingFunctions",
         "PSUseSingularNouns",
+        "PSUseSupportsShouldProcess",
         "PSUseToExportFieldsInManifest",
         "PSUseUTF8EncodingForHelpFile"
     )
