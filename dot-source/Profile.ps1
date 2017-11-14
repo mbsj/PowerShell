@@ -4,8 +4,7 @@ param()
 
 Set-StrictMode -Version Latest
 
-function prompt
-{
+function prompt {
     $Host.UI.RawUI.WindowTitle = $Env:USERNAME + " - " + $Env:COMPUTERNAME + " - " + $Host.Name + " - " + $Host.Version
     "PS " + $(get-location) + ">"
 }
@@ -56,9 +55,8 @@ if ($missingModules) {
 
     Installs all missing modules for all local users.
 #>
-function Install-MissingModule
-{
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+function Install-MissingModule {
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
     Param(
         # Install the modules for all users rather than the current user only
         [Switch]$AllUsers
@@ -66,7 +64,8 @@ function Install-MissingModule
 
     $scope = if ($AllUsers) {
         "AllUsers"
-    } else {
+    }
+    else {
         "CurrentUser"
     }
 
