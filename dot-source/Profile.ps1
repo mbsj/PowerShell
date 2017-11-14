@@ -15,13 +15,9 @@ $env:PSModulePath += ";C:\Users\$env:USERNAME\OneDrive - KMD\PowerShell_KMD\Modu
 
 $modules = @(
     "PSReadLine",
-    #"PowerShellCookbook",
     "PSScriptAnalyzer",
     "xPSDesiredStateConfiguration",
     "xDSCResourceDesigner",
-    "ISEModuleBrowserAddon",
-    "ScriptBrowser",
-    "ISERemoteTab",
     "Pester"
 )
 
