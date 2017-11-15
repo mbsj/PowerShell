@@ -25,7 +25,7 @@ param(
 
     # Maximum age of events.
     [Parameter(Position = 1)]
-    [ValidateScript( {$_ -lt (Get-Date)})]
+    [ValidateScript( {($_ -lt (Get-Date)) -and ($_ -gt (Get-Date -Year 1970 -Month 01 -Day 01 -Hour 1 -Minute 0 -Second 0 -Millisecond 0))})]
     [DateTime]$MaxAge,
 
     # Credential to use when connecting to remote sessions
