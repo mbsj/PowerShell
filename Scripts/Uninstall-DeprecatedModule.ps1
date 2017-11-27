@@ -1,26 +1,25 @@
 <#
 .SYNOPSIS
-    Removes installed PowerShell modules where newer versions exist.
+    Uninstalls installed PowerShell modules where newer versions exist.
 .DESCRIPTION
     Parses the list of installed modules on the local computer. 
     If a module has several versions installed, the older versions are uninstalled, leaving only the newest version. 
     System modules, modules installed in C:\Windows\system32\WindowsPowerShell\v1.0\Modules, are ignored.
 .EXAMPLE
-    Example of how to use this cmdlet
+    .\Uninstall-DeprecatedModule.ps1
+    Uninstalls all old versions of all modules. Will ask for confirmation for each one.
 .EXAMPLE
-    Another example of how to use this cmdlet
+    .\Uninstall-DeprecatedModule.ps1 -Name "PSScriptAnalyzer","xPSDesiredStateConfiguration"
+    Uninstalls old versions of the two modules "PSScriptAnalyzer" and "xPSDesiredStateConfiguration"
+.EXAMPLE
+    .\Uninstall-DeprecatedModule.ps1 -Confirm:$false
+    Uninstalls all old versions of all modules. Will not ask for confirmation before uninstalling.
 .INPUTS
-    Inputs to this cmdlet (if any)
+    String array with one or more name filters
 .OUTPUTS
-    Output from this cmdlet (if any)
+    None
 .NOTES
-    General notes
-.COMPONENT
-    The component this cmdlet belongs to
-.ROLE
-    The role this cmdlet belongs to
-.FUNCTIONALITY
-    The functionality that best describes this cmdlet
+    Will only work for modules that can be uninstalled with the "Uninstall-Module" cmdlet.
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
