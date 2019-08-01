@@ -30,7 +30,7 @@
     Copyright            = '(c) 2019 Mark Birkedal Stjerslev. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description          = 'Functions to manage font installation'
+    Description          = 'Functions to manage font installation for the current user context only.'
 
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion    = '5.1'
