@@ -24,18 +24,16 @@ Mark Birkedal Stjerslev - 2019-08-01
 function Install-Font {
     [CmdletBinding()]
     param (
-        # Path to a font file or a folder containing multiple font files.
         [Parameter(Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
-            HelpMessage = "Path to one or more locations.")]
+            HelpMessage = "Path to a font file or a folder containing multiple font files")]
         [ValidateNotNullOrEmpty()]
         [string[]]
         $Path,
 
-        # Force installation even if the font already exists.
-        [Parameter()]
+        [Parameter(HelpMessage = "Force installation even if the font already exists")]
         [switch]
         $Force
     )
@@ -80,10 +78,3 @@ function Install-Font {
         }
     }
 }
-
-
-
-
-
-
-
