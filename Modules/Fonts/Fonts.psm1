@@ -1,5 +1,13 @@
 #requires -Version 2
 
+$userFontRegPath = "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts"
+$fontFileTypes = @{ }
+$fontFileTypes.Add(".fon", "")
+$fontFileTypes.Add(".fnt", "")
+$fontFileTypes.Add(".ttf", " (TrueType)")
+$fontFileTypes.Add(".ttc", " (TrueType)")
+$fontFileTypes.Add(".otf", " (OpenType)")
+
 <#
 .SYNOPSIS
 Installs one or more fonts for the current user.
@@ -30,6 +38,7 @@ function Install-Font {
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = "Path to a font file or a folder containing multiple font files")]
         [ValidateNotNullOrEmpty()]
+        [ValidateScript( { Test-Path $_ })]
         [string[]]
         $Path,
 
@@ -39,19 +48,11 @@ function Install-Font {
     )
 
     begin {
-        $fontFileTypes = @{ }
-        $fontFileTypes.Add(".fon", "")
-        $fontFileTypes.Add(".fnt", "")
-        $fontFileTypes.Add(".ttf", " (TrueType)")
-        $fontFileTypes.Add(".ttc", " (TrueType)")
-        $fontFileTypes.Add(".otf", " (OpenType)")
-
         $userFontRoot = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Microsoft\Windows\Fonts"
-        $userFontRegPath = "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts"
     }
 
     process {
-        $fontFiles = Get-ChildItem $FontPath
+        $fontFiles = Get-ChildItem $FontPath | Where-Object { $_.Extension -in $fontFileTypes.Keys }
 
         Write-Verbose "Installing $($fontFiles | Measure-Object | Select-Object -ExpandProperty Count) font(s)"
 
@@ -76,5 +77,47 @@ function Install-Font {
                 Write-Verbose "$($fontFile.FullName) installed."
             }
         }
+    }
+}
+
+<#
+.SYNOPSIS
+Returns a list of installed fonts.
+
+.DESCRIPTION
+Returns a hash table with the name of the font as the key, and the path to the font file as the value.
+
+.EXAMPLE
+Get-Font
+Returns a list of fonts and font files.
+
+.EXAMPLE
+Get-Font | Foreach-Object { Test-Path $_.Value }
+Returns a list of fonts and iterates over them to test that the font files actually exist.
+
+.NOTES
+Mark Birkedal Stjerslev - 2019-08-01
+#>
+
+function Get-Font {
+    [CmdletBinding()]
+    param (
+
+    )
+
+    begin {
+        $fonts = @{ }
+    }
+
+    process {
+        $fontRegItem = Get-Item -Path $userFontRegPath
+
+        $fontRegItem.Property | ForEach-Object {
+            $fonts.Add($_, $fontRegItem.GetValue($_))
+        }
+    }
+
+    end {
+        $fonts
     }
 }
