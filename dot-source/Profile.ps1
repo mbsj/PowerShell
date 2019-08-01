@@ -45,7 +45,7 @@ if ($missingModules) {
 .EXAMPLE
   Install-MissingModule
 
-  Installs all missing modules for the current user. 
+  Installs all missing modules for the current user.
 .EXAMPLE
    Install-MissingModule -Verbose
 
@@ -74,4 +74,20 @@ function Install-MissingModule {
     }
 
     Install-Module -Name $missingModules -Verbose:$VerbosePreference -WhatIf:$WhatIfPreference -Scope $scope
+}
+
+$requiredFonts = @(
+    "Fira Code Bold (TrueType)",
+    "Fira Code Medium (TrueType)",
+    "Fira Code Retina (TrueType)",
+    "Fira Code Light (TrueType)",
+    "Fira Code Regular (TrueType)"
+)
+
+$installedFonts = Get-Font
+
+$requiredFonts | ForEach-Object {
+    if ($installedFonts.Keys -notcontains $_) {
+        Write-Warning "Font $_ missing. Download and install from https://github.com/tonsky/FiraCode"
+    }
 }
