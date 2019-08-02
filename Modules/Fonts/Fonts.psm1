@@ -30,7 +30,7 @@ Mark Birkedal Stjerslev - 2019-08-01
 #>
 
 function Install-Font {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(Mandatory = $true,
             Position = 0,
@@ -52,7 +52,9 @@ function Install-Font {
     }
 
     process {
-        $fontFiles = Get-ChildItem $FontPath | Where-Object { $_.Extension -in $fontFileTypes.Keys }
+        Write-Verbose "Getting font files from $Path"
+
+        $fontFiles = Get-ChildItem $Path | Where-Object { $_.Extension -in $fontFileTypes.Keys }
 
         Write-Verbose "Installing $($fontFiles | Measure-Object | Select-Object -ExpandProperty Count) font(s)"
 
@@ -70,9 +72,9 @@ function Install-Font {
                 Write-Error "The font `"$fontName`" is already installed."
             }
             else {
-                Copy-Item -Path $fontFile -Destination $userFontRoot -Verbose:$VerbosePreference
+                Copy-Item -Path $fontFile -Destination $userFontRoot -Verbose:$VerbosePreference -WhatIf:$WhatIfPreference
 
-                $regKey = New-ItemProperty -Path $userFontRegPath -Name $fontRegKeyName -Value $destinationFile -PropertyType "String" -Verbose:$VerbosePreference
+                New-ItemProperty -Path $userFontRegPath -Name $fontRegKeyName -Value $destinationFile -PropertyType "String" -Verbose:$VerbosePreference -WhatIf:$WhatIfPreference | Out-Null
 
                 Write-Verbose "$($fontFile.FullName) installed."
             }
