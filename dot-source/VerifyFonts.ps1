@@ -10,6 +10,6 @@ $installedFonts = Get-Font
 
 $requiredFonts | ForEach-Object {
     if ($installedFonts.Keys -notcontains $_) {
-        Write-Warning "Font $_ missing. Download and install from https://github.com/tonsky/FiraCode"
+        Write-Warning "Font $_ missing. Download and install from https://github.com/tonsky/FiraCode/releases/latest"
     }
 }
