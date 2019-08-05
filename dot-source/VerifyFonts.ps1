@@ -2,7 +2,7 @@
 param (
 )
 
-Write-Verbose "Verifying that fonts are installed..."
+Write-Verbose "Verifying fonts are installed..."
 $fontFilesPathRoot = Join-Path -Path $env:OneDriveConsumer -ChildPath "Technical\FiraCode_1.207\ttf"
 
 $requiredFonts = @{
