@@ -29,7 +29,7 @@ $installedModules | Sort-Object | ForEach-Object {
 $missingModules = $modules | Compare-Object -ReferenceObject $installedModules | Select-Object -ExpandProperty InputObject
 
 if ($missingModules) {
-    Write-War "Missing modules:"
+    Write-Warning "Missing module(s):"
     $missingModules | Sort-Object | ForEach-Object {
         Write-Warning "`t$_"
     }
