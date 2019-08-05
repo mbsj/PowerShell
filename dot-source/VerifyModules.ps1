@@ -20,7 +20,7 @@ if (Get-Module -ListAvailable "PowerShellCookbook") {
 }
 
 if ($missingModules) {
-    Write-Warning "To install missing modules, use function `"Install-MissingModules`""
+    Write-Warning "To install missing modules, use function `"Install-MissingModule`""
 }
 
 <#
