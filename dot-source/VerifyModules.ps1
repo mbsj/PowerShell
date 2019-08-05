@@ -1,18 +1,36 @@
+[CmdletBinding(SupportsShouldProcess = $true)]
+param (
+)
+
+Write-Verbose "Verifying modules are installed..."
 
 $modules = @(
     "PSReadLine",
     "PSScriptAnalyzer",
     "xPSDesiredStateConfiguration",
     "xDSCResourceDesigner",
-    "Pester"
+    "Pester",
+    "test"
 )
 
-$missingModules = @()
-$modules | ForEach-Object {
-    if (-not (Get-Module -ListAvailable $_)) {
-        Write-Warning "Module $_ not installed."
-        $missingModules += $_
-    }
+Write-Verbose "The following modules are expected:"
+$modules | Sort-Object | ForEach-Object {
+    Write-Verbose "`t$_"
+}
+
+Write-Verbose "Getting installed modules..."
+$installedModules = Get-Module -Name $modules -ListAvailable -Verbose:$false | Select-Object -ExpandProperty Name -Unique
+
+Write-Verbose "The following modules are installed:"
+$installedModules | Sort-Object | ForEach-Object {
+    Write-Verbose "`t$_"
+}
+
+$missingModules = $modules | Compare-Object -ReferenceObject $installedModules | Select-Object -ExpandProperty InputObject
+
+Write-Verbose "Missing modules:"
+$missingModules | Sort-Object | ForEach-Object {
+    Write-Verbose "`t$_"
 }
 
 if (Get-Module -ListAvailable "PowerShellCookbook") {
