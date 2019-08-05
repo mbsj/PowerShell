@@ -28,16 +28,12 @@ $installedModules | Sort-Object | ForEach-Object {
 
 $missingModules = $modules | Compare-Object -ReferenceObject $installedModules | Select-Object -ExpandProperty InputObject
 
-Write-Verbose "Missing modules:"
-$missingModules | Sort-Object | ForEach-Object {
-    Write-Verbose "`t$_"
-}
-
-if (Get-Module -ListAvailable "PowerShellCookbook") {
-    Import-Module PowerShellCookbook -Prefix "Cookbook"
-}
-
 if ($missingModules) {
+    Write-War "Missing modules:"
+    $missingModules | Sort-Object | ForEach-Object {
+        Write-Warning "`t$_"
+    }
+
     Write-Warning "To install missing modules, use function `"Install-MissingModule`""
 }
 
