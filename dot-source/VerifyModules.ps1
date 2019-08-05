@@ -9,8 +9,7 @@ $modules = @(
     "PSScriptAnalyzer",
     "xPSDesiredStateConfiguration",
     "xDSCResourceDesigner",
-    "Pester",
-    "test"
+    "Pester"
 )
 
 Write-Verbose "The following modules are expected:"
