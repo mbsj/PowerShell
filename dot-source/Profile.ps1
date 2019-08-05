@@ -10,3 +10,8 @@ function prompt {
 
 $env:PSModulePath += ";C:\Users\$env:USERNAME\OneDrive\PowerShell\Modules"
 $env:PSModulePath += ";C:\Users\$env:USERNAME\OneDrive - KMD\PowerShell_KMD\Modules"
+
+
+if (Get-Module -ListAvailable "PowerShellCookbook") {
+    Import-Module PowerShellCookbook -Prefix "Cookbook"
+}
