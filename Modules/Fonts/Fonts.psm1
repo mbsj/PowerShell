@@ -103,8 +103,8 @@ Mark Birkedal Stjerslev - 2019-08-01
 
 function Get-Font {
     [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
     param (
-
     )
 
     begin {
