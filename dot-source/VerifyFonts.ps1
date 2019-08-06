@@ -42,6 +42,19 @@ else {
     Write-Verbose "No missing fonts."
 }
 
+<#
+.SYNOPSIS
+Install missing fonts.
+
+.DESCRIPTION
+Install the fonts that are deemed as missing by using the "Install-Font" cmdlet from the custom "Fonts" module.
+
+.EXAMPLE
+Install-MissingFont
+
+.NOTES
+Mark Birkedal Stjerslev - 2019-08-02
+#>
 function Install-MissingFont {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
