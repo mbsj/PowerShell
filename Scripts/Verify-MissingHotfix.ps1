@@ -41,7 +41,6 @@
     If the -ByHotfix parameter is used, the key will be hotfix IDs and the value will be the computernames where the hotfix is missing.
 #>
 [CmdletBinding(SupportsShouldProcess = $false, ConfirmImpact = 'Low')]
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('WorkflowNotSupportedInPowerShellCore', '')]
 Param (
     # Name of the computers to check
     [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
