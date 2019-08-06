@@ -103,7 +103,7 @@ Describe "Get-DiskSize" {
     }
 
     It "Calls Get-CimInstance once" {
-        Assert-MockCalled Get-CimInstance -Exactly 1 
+        Assert-MockCalled Get-CimInstance -Exactly 1
     }
 
     It "Should return one result set per computer name supplied" {

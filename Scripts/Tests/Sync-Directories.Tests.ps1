@@ -49,7 +49,7 @@ Describe "Sync-Directories" {
         }
 
         New-Item -Path $testDriveLog -ItemType File
-        
+
         It "Script should run without error" {
             $physicalSource = Get-Item $testDriveSource
             $physicalDestination = Get-Item $testDriveDestination
@@ -57,8 +57,8 @@ Describe "Sync-Directories" {
 
             Get-Item $testDriveLog | Remove-Item
 
-            $syncScript = { & $scriptFile -LogPath $physicalLog -SourcePath $physicalSource -DestinationPath $physicalDestination } 
-            
+            $syncScript = { & $scriptFile -LogPath $physicalLog -SourcePath $physicalSource -DestinationPath $physicalDestination }
+
             $syncScript | Should Not Throw
         }
 
@@ -108,7 +108,7 @@ Describe "Sync-Directories" {
         $destinationFiles | ForEach-Object {
             New-Item -Path $testDriveDestination -Name $_ -ItemType File
         }
-        
+
         New-Item -Path $testDriveLog -ItemType File
 
         $sourceFiles | ForEach-Object {
@@ -126,7 +126,7 @@ Describe "Sync-Directories" {
         It "Destination file File3 should be empty" {
             Get-Item -Path (Join-Path -Path $testDriveDestination -ChildPath "File3") | Select-Object -ExpandProperty Length | Should Be 0
         }
-        
+
         It "Script should run without error" {
             $physicalSource = Get-Item $testDriveSource
             $physicalDestination = Get-Item $testDriveDestination
@@ -134,8 +134,8 @@ Describe "Sync-Directories" {
 
             Get-Item $testDriveLog | Remove-Item
 
-            $syncScript = { & $scriptFile -LogPath $physicalLog -SourcePath $physicalSource -DestinationPath $physicalDestination -Mirror } 
-            
+            $syncScript = { & $scriptFile -LogPath $physicalLog -SourcePath $physicalSource -DestinationPath $physicalDestination -Mirror }
+
             $syncScript | Should Not Throw
         }
 
@@ -185,8 +185,8 @@ Describe "Sync-Directories" {
             $physicalSource = Get-Item $testDriveSource
             $physicalDestination = Get-Item $testDriveDestination
 
-            $syncScript = { & $scriptFile -LogPath $physicalLog -SourcePath $physicalSource -DestinationPath $physicalDestination -Mirror } 
-            
+            $syncScript = { & $scriptFile -LogPath $physicalLog -SourcePath $physicalSource -DestinationPath $physicalDestination -Mirror }
+
             $syncScript | Should Not Throw
         }
 

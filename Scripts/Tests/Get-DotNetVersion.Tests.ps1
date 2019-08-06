@@ -2531,7 +2531,7 @@ Describe "Get-DotNetVersion" {
         }
 
         It "Calls Get-ChildItem on registry once" {
-            Assert-MockCalled Get-ChildItem -Exactly 1 
+            Assert-MockCalled Get-ChildItem -Exactly 1
         }
 
         $info = & $scriptFile
@@ -2584,7 +2584,7 @@ Describe "Get-DotNetVersion" {
 
         It "Calls Invoke-Comand on remote server with credentials" {
             Assert-MockCalled Invoke-Command -Exactly 2 -ParameterFilter {
-                $ComputerName -and $ComputerName -eq "server1" -and 
+                $ComputerName -and $ComputerName -eq "server1" -and
                 $Credential -and $null -ne $Credential
             }
         }
@@ -2595,7 +2595,7 @@ Describe "Get-DotNetVersion" {
 
         It "Calls Invoke-Comand on remote server on custom port" {
             Assert-MockCalled Invoke-Command -Exactly 1 -ParameterFilter {
-                $ComputerName -and $ComputerName -eq "server1" -and 
+                $ComputerName -and $ComputerName -eq "server1" -and
                 $Port -and $Port -eq 80
             }
         }
@@ -2606,8 +2606,8 @@ Describe "Get-DotNetVersion" {
 
         It "Calls Invoke-Comand on remote server with credentials and custom port" {
             Assert-MockCalled Invoke-Command -Exactly 2 -ParameterFilter {
-                $ComputerName -and $ComputerName -eq "server1" -and 
-                $Credential -and $null -ne $Credential -and 
+                $ComputerName -and $ComputerName -eq "server1" -and
+                $Credential -and $null -ne $Credential -and
                 $Port -and $Port -eq 80
             }
         }

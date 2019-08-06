@@ -31,27 +31,27 @@ Describe New-LoremIpsum {
 
     Context "-Type Word -Count 10" {
         $ipsum = & $scriptFile -Type Word -Count 10
-        
+
         It "Text should contain number of words matching what is specified in -Count" {
             $ipsum.Text -split "\s" | Measure-Object | Select-Object -ExpandProperty Count | Should Be 10
         }
-        
+
         It "Reported words should match what is specified in -Count" {
             $ipsum.Words | Should Be 10
         }
-        
+
         It "Text should not start with standard lorem ipsum phrase" {
             $ipsum.Text | Should Not Match "Lorem ipsum dolor sit amet, consectetur adipiscing elit.*"
         }
     }
 
     Context "-Type Byte -Count 50" {
-        $ipsum = & $scriptFile -Type Byte -Count 50 
-        
+        $ipsum = & $scriptFile -Type Byte -Count 50
+
         It "Text byte size should match what is specified in -Count" {
             [System.Text.Encoding]::UTF8.GetByteCount($ipsum.Text) | Should Be 50
         }
-        
+
         It "Reported bytes should match what is specified in -Count" {
             $ipsum.Bytes | Should Be 50
         }

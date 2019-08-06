@@ -1,4 +1,4 @@
-$powerShellPaths = @{
+﻿$powerShellPaths = @{
     "HKLM:\SOFTWARE\Microsoft\PowerShell\*\PowerShellEngine"      = "PowerShellVersion";
     "HKLM:\SOFTWARE\Microsoft\PowerShellCore\InstalledVersions\*" = "SemanticVersion"
 }

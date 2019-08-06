@@ -28,7 +28,7 @@ Describe "Set-LogonWallpaper" {
     }
 
     it "Copies image file to OEMBackground folder" {
-        Assert-MockCalled -CommandName Copy-Item -Times 1 -ParameterFilter { 
+        Assert-MockCalled -CommandName Copy-Item -Times 1 -ParameterFilter {
             $Path -eq $imagePath
         }
     }

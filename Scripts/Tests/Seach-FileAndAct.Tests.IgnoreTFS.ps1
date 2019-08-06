@@ -23,7 +23,7 @@ adsasd
     Context "Matching" {
         It "Should run without error" {
             if (Test-Path $pathStateFile) {
-                Remove-Item $pathStateFile -Force 
+                Remove-Item $pathStateFile -Force
             }
 
             $script = { &  $scriptFile -Path $pathSourceFile -Pattern $pattern -ScriptBlock {} -StatePath $pathStateFile }
@@ -32,19 +32,19 @@ adsasd
 
         It "Variable `$Line should contain the entire line where a match was found" {
             if (Test-Path $pathStateFile) {
-                Remove-Item $pathStateFile -Force 
+                Remove-Item $pathStateFile -Force
             }
             $scriptBlock = { $Line }
-    
+
             &  $scriptFile -Path $pathSourceFile -Pattern $pattern -StatePath $pathStateFile -ScriptBlock $scriptBlock | Should Be "qw123c"
         }
 
         It "Variable `$Matches should contain the match information for the line where a match was found" {
             if (Test-Path $pathStateFile) {
-                Remove-Item $pathStateFile -Force 
+                Remove-Item $pathStateFile -Force
             }
             $scriptBlock = { $Matches }
-    
+
             $matches = &  $scriptFile -Path $pathSourceFile -Pattern $pattern -StatePath $pathStateFile -ScriptBlock $scriptBlock
             $matches.Keys.Count | Should be 2
             $matches[1] | Should Be "123"
@@ -57,8 +57,8 @@ adsasd
             &  $scriptFile -Path $pathSourceFile -Pattern $pattern -ScriptBlock {} -StatePath $pathStateFile
 
             $pathStateFile | Should Exist
-        }        
-        
+        }
+
         It "State file should contain total number of lines in source file" {
             if (Test-Path $pathStateFile) { Remove-Item $pathStateFile -Force }
             &  $scriptFile -Path $pathSourceFile -Pattern $pattern -ScriptBlock {} -StatePath $pathStateFile

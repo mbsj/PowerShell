@@ -41,6 +41,7 @@
     If the -ByHotfix parameter is used, the key will be hotfix IDs and the value will be the computernames where the hotfix is missing.
 #>
 [CmdletBinding(SupportsShouldProcess = $false, ConfirmImpact = 'Low')]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('WorkflowNotSupportedInPowerShellCore', '')]
 Param (
     # Name of the computers to check
     [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
@@ -84,7 +85,7 @@ process {
     }
 
     Write-Verbose "Getting missing hotfixes from baseline: `r`n`t$($Baseline -join "`r`n`t")"
-    $missingHotfixes = @{}
+    $missingHotfixes = @{ }
     foreach ($computerHotfix in $computerHotfixes) {
         $missing = $Baseline | Where-Object { $computerHotfix["HotfixIDs"] -notcontains $_ }
         $missingHotfixes.Add($computerHotfix["ComputerName"], $missing)
@@ -95,7 +96,7 @@ end {
     if ($ByHotfix) {
         $uniqueMissingIDs = $missingHotfixes.GetEnumerator() | Select-Object -ExpandProperty Value | Select-Object -Unique
 
-        $missingComputers = @{}
+        $missingComputers = @{ }
         foreach ($id in $uniqueMissingIDs) {
             $missingComputers.Add($id, @())
 

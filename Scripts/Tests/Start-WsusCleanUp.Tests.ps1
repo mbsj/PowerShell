@@ -2,14 +2,14 @@ Describe "Start-WsusCleanUp" {
     $scriptFile = Join-Path -Path $PSScriptRoot -ChildPath "..\Start-WsusCleanUp.ps1"
 
     It "Should throw missing type" {
-        $scriptRun = { & $scriptFile } 
-            
+        $scriptRun = { & $scriptFile }
+
         $scriptRun | Should Throw "Unable to find type [Microsoft.UpdateServices.Administration.AdminProxy]."
     }
 
     It "Should allow wildcard in -CleanupScope" {
-        $scriptRun = { & $scriptFile -CleanupScope "*" } 
-            
+        $scriptRun = { & $scriptFile -CleanupScope "*" }
+
         $scriptRun | Should Throw "Unable to find type [Microsoft.UpdateServices.Administration.AdminProxy]."
     }
 
@@ -19,15 +19,15 @@ Describe "Start-WsusCleanUp" {
 
     $scopes | ForEach-Object {
         It "Should allow scope $_" {
-            $scriptRun = { & $scriptFile -CleanupScope $_ } 
-            
+            $scriptRun = { & $scriptFile -CleanupScope $_ }
+
             $scriptRun | Should Throw "Unable to find type [Microsoft.UpdateServices.Administration.AdminProxy]."
         }
     }
 
     It "Should all all scopes" {
-        $scriptRun = { & $scriptFile -CleanupScope $scopes } 
-            
+        $scriptRun = { & $scriptFile -CleanupScope $scopes }
+
         $scriptRun | Should Throw "Unable to find type [Microsoft.UpdateServices.Administration.AdminProxy]."
     }
 }
