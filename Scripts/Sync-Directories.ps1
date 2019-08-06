@@ -8,12 +8,12 @@
 .EXAMPLE
     .\Sync-Directories.ps1 -SourcePath "C:\Data" -DestinationPath "D:\Sync\Save"
 
-    Synchronizes the contents of C:\Data to D:\Sync\Save. 
+    Synchronizes the contents of C:\Data to D:\Sync\Save.
     Log data is saved to the script folder in a log file named after the source folder: Data_log.txt
 .EXAMPLE
     .\Sync-Directories.ps1 -SourcePath "C:\Data" -DestinationPath "D:\Sync\Save\Data"  -LogPath "C:\Sync\Log.txt" -Force
 
-    Synchronizes the contents of C:\Data to D:\Sync\Save. If the destination folder does not exist it will be created. 
+    Synchronizes the contents of C:\Data to D:\Sync\Save. If the destination folder does not exist it will be created.
     Saves the log data to C:\Sync\Log.txt.
 #>
 [CmdletBinding(SupportsShouldProcess = $true, PositionalBinding = $false, ConfirmImpact = 'Medium')]
@@ -34,9 +34,9 @@ Param
 
     # If the destination folder does not exist, create it
     [Parameter()]
-    [Switch]$Force, 
+    [Switch]$Force,
 
-    # Mirrors the destination with the source, making the two folders equal. If file are present in the destination but not in the source, these files will be deleted. 
+    # Mirrors the destination with the source, making the two folders equal. If file are present in the destination but not in the source, these files will be deleted.
     [Parameter()]
     [Switch]$Mirror
 )
@@ -53,7 +53,7 @@ Begin {
 Process {
     if ($pscmdlet.ShouldProcess("$DestinationPath", "$operation $SourcePath")) {
         $logFile = Join-Path $PSScriptRoot "$(Split-Path $SourcePath -Leaf)_log.txt"
-            
+
         if ($LogPath) {
             $logFile = $LogPath
         }
@@ -76,7 +76,7 @@ Process {
         }
 
         $arguments = @(
-            "`"$SourcePath`"", 
+            "`"$SourcePath`"",
             "`"$DestinationPath`"",
             "/r:5",
             "/w:1",

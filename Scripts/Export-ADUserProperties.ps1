@@ -3,7 +3,7 @@
    Exports a CSV with a list of AD users and chosen properties.
 .DESCRIPTION
    List Active Directory users recursively in a chose OU and get any chosen properties. Finally, export to a CSV file.
-   Default properties are: 
+   Default properties are:
       samaccountname
       givenname
       sn
@@ -13,12 +13,12 @@
 .EXAMPLE
    .\Export-ADUserProperties.ps1 -LDAPPath "LDAP://OU=Users,DC=domain,DC=local"
 
-   List all users in the OU "Users" and get the default properties. 
+   List all users in the OU "Users" and get the default properties.
    Exports to a CSV file in the same directory as the scrip called "ADUserProperties.csv"
 .EXAMPLE
    .\Export-ADUserProperties.ps1 -LDAPPath "LDAP://OU=Users,DC=domain,DC=local" -CSVPath "C:\Users\UserName\Desktop\UserProps.csv"
 
-   List all users in the OU "Users" and get the default properties. 
+   List all users in the OU "Users" and get the default properties.
    Exports to a CSV file at the chosen path.
 .EXAMPLE
    .\Export-ADUserProperties.ps1 -LDAPPath "LDAP://OU=Users,DC=domain,DC=local" -Properties "samaccountname","displayname","accountexpires"
@@ -30,10 +30,10 @@
 .OUTPUTS
    System.Management.Automation.PSCustomObject
 .NOTES
-   This function does not take pipeline input. 
+   This function does not take pipeline input.
 #>
 
-[CmdletBinding(SupportsShouldProcess=$false, 
+[CmdletBinding(SupportsShouldProcess=$false,
                 PositionalBinding=$false,
                 ConfirmImpact='Low')]
 [OutputType([System.Management.Automation.PSCustomObject])]
@@ -44,7 +44,7 @@ Param
     [ValidatePattern("^LDAP://.*")]
     [String]$LDAPPath,
 
-    # Path to exported CSV file. 
+    # Path to exported CSV file.
     [ValidateNotNullOrEmpty()]
     [String]$CSVPath = (Join-Path -Path $PSScriptRoot -ChildPath "ADUserProperties.csv"),
 
@@ -97,7 +97,7 @@ Process
 
     for ($i = 0; $i -lt $persons.Count; $i++) {
         Write-Progress -Activity "Exporting user properties..." -Status "Parsing users" -CurrentOperation ("$i of $($persons.Count)") -PercentComplete ($i / $persons.Count * 100)
-        $user = New-Object -TypeName psobject 
+        $user = New-Object -TypeName psobject
 
         $properties | ForEach-Object {
             if ($persons[$i].Properties.Contains($_)) {
@@ -109,7 +109,7 @@ Process
 
         $users += $user
     }
-    
+
     Write-Progress -Activity "Exporting user properties..." -Status "Exporting to CSV file" -PercentComplete 100
     Write-Verbose "Exporting to $CSVPath"
 

@@ -48,14 +48,14 @@ public class Audio {
     set { Marshal.ThrowExceptionForHR(Vol().SetMute(value, System.Guid.Empty)); }
   }
 }
-'@ 
+'@
 
 <#
 .SYNOPSIS
     Gets the current volume level
 .DESCRIPTION
-    Gets the current system volume level. 
-    Returns values from 0 to 100, representing the percent level to set. 
+    Gets the current system volume level.
+    Returns values from 0 to 100, representing the percent level to set.
 .EXAMPLE
     Get-AudioVolume
     Gets the current volume level
@@ -81,8 +81,8 @@ function Get-AudioVolume {
 .SYNOPSIS
     Set volume level
 .DESCRIPTION
-    Sets the volume to the desired level. 
-    Takes values from 0 to 100, representing the percent level to set. 
+    Sets the volume to the desired level.
+    Takes values from 0 to 100, representing the percent level to set.
 .EXAMPLE
     Set-AudioVolume -Level 50
     Sets the volume to 50%
@@ -116,8 +116,8 @@ function Set-AudioVolume {
 .SYNOPSIS
     Gets the current mute status
 .DESCRIPTION
-    Gets the current audio mute status. 
-    Returns true or false, representing if the system is muted or not, respectively. 
+    Gets the current audio mute status.
+    Returns true or false, representing if the system is muted or not, respectively.
 .EXAMPLE
     Get-AudioMute
     Gets the current status for audio mute
@@ -143,7 +143,7 @@ function Get-AudioMute {
 .SYNOPSIS
     Sets the desired mute status
 .DESCRIPTION
-    Enables or disables audio mute. 
+    Enables or disables audio mute.
     If note status is defined, will toggle the status based on the current status. If the audio is muted it will be unmuted and vice versa.
 .EXAMPLE
     Set-AudioMute -Status Mute

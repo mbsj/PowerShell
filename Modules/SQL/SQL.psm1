@@ -2,11 +2,11 @@
 .Synopsis
    Invokes a SQL query against a specified database
 .DESCRIPTION
-   Invokes one or more queries against a specified SQL database. Result set is loaded into data table rows and returned directly. 
+   Invokes one or more queries against a specified SQL database. Result set is loaded into data table rows and returned directly.
 .EXAMPLE
    .\Invoke-SQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB
 
-   Invokes the query against the specified server and database. Uses a trusted connection and the default timeout of 10 seconds. 
+   Invokes the query against the specified server and database. Uses a trusted connection and the default timeout of 10 seconds.
 .EXAMPLE
    .\Invoke-SQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB -Timeout 60
 
@@ -14,19 +14,19 @@
 .EXAMPLE
    .\Invoke-SQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB -Username DBUser -Password SuperSecretPassword
 
-   Invokes the query against the specified server and database but connects using standard security. 
+   Invokes the query against the specified server and database but connects using standard security.
    This requires an explicit username and password which is specified in -Username and -Password
 .EXAMPLE
    $queries | .\Invoke-SQL.ps1 -Query "SELECT * FROM Table" -Server DBServer01 -Database StoreDB
 
-   $queries is an array of several query strings. One connection is made after which each query is invoked against the server as in the first example. 
+   $queries is an array of several query strings. One connection is made after which each query is invoked against the server as in the first example.
 .NOTES
-    Be cautious when executing multiple queries against different tables. As each table will return different properties, these may be hidden when using i.e. Format-Table to format output. 
-    The formating cmdlet will use the first objects to define the properties to show, and so will not show properties for rows returned later in the result set. 
+    Be cautious when executing multiple queries against different tables. As each table will return different properties, these may be hidden when using i.e. Format-Table to format output.
+    The formating cmdlet will use the first objects to define the properties to show, and so will not show properties for rows returned later in the result set.
 #>
 function Invoke-SQL {
     [CmdletBinding(DefaultParameterSetName = 'Trusted Connection',
-        SupportsShouldProcess = $true, 
+        SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'Medium')]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingUserNameAndPassWordParams", "")]
@@ -80,7 +80,7 @@ function Invoke-SQL {
     Process {
         $command = New-Object System.Data.SqlClient.SqlCommand($Query, $connection)
         $command.CommandTimeout = $Timeout
-        
+
         $dataTable = New-Object System.Data.DataTable
 
         Write-Verbose "Executing query $Query"

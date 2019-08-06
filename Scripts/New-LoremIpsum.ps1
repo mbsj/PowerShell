@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Generates a now lorem ipsum string. 
+    Generates a now lorem ipsum string.
 .DESCRIPTION
-    Queries the site http://lipsum.com for a new string with lorem ipsum content. 
+    Queries the site http://lipsum.com for a new string with lorem ipsum content.
 .EXAMPLE
     .\New-LoremIpsum.ps1
     Generates one paragraph.
@@ -10,8 +10,8 @@
     .\New-LoremIpsum.ps1 -Type Word -Count 50
     Generates a 50 word string
 .EXAMPLE
-    .\New-LoremIpsum.ps1 -StandardStart 
-    Generates one paragraph, beginning with the standard lorem ipsum sentence. 
+    .\New-LoremIpsum.ps1 -StandardStart
+    Generates one paragraph, beginning with the standard lorem ipsum sentence.
 .INPUTS
 
 .OUTPUTS
@@ -35,7 +35,7 @@ param (
     [Parameter(Position = 1)]
     [ValidateScript( {$_ -gt 0} )]
     [Int]$Count = 1,
-    
+
     # Whether to include the standard lorem ipsum string at the beginning: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     [Parameter()]
     [Switch]$StandardStart
@@ -44,13 +44,13 @@ param (
 begin {
     $shortType = switch ($Type) {
         "Paragraph" {
-            "paras" 
+            "paras"
         }
         "Word" {
-            "words" 
+            "words"
         }
         "Byte" {
-            "bytes" 
+            "bytes"
         }
     }
 
@@ -76,16 +76,16 @@ process {
 
     if ($pscmdlet.ShouldProcess("http://www.lipsum.com/feed/xml", "Query for $Count $Type")) {
         [xml]$response = Invoke-WebRequest -Uri $uri -ErrorAction Stop
-        
+
         $response.feed.generated -match $generatedRegex | Out-Null
-        
+
         $props = @{
             Bytes      = [int]$Matches[3]
             Paragraphs = [int]$Matches[1]
             Words      = [int]$Matches[2]
             Text       = $response.feed.lipsum
         }
-        
+
         New-Object -TypeName psobject -Property $props
     }
 }

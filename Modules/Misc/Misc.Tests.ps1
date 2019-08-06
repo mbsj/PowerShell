@@ -31,7 +31,7 @@ InModuleScope Misc {
         }
 
         Context "-Length 32" {
-            $longPassword = Get-Password -Length 32 
+            $longPassword = Get-Password -Length 32
 
             It "Should generate 32 character password" {
                 $longPassword.Length | Should Be 32
@@ -48,14 +48,14 @@ InModuleScope Misc {
             It "Should generate default length 16 character password" {
                 $numericPassword.Length | Should Be 16
             }
-            
+
             It "Should be only numbers" {
                 $numericPassword | Should Match "\d{16}"
             }
         }
 
         Context "-Numeric -Complex" {
-            $errorScript = { Get-Password -Numeric -Complex } 
+            $errorScript = { Get-Password -Numeric -Complex }
 
             It ("Should create error when using both Numeric and Complex") {
                 $errorScript | Should Throw "Parameter set cannot be resolved using the specified named parameters"

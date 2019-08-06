@@ -35,7 +35,7 @@ process {
 
     if (-not (Test-Path $oemPath) -or $Force) {
         New-Item -Path $oemPath -ItemType Directory -Force -WhatIf:$WhatIfPreference
-    } 
+    }
 
     Copy-Item -Path $ImagePath -Destination (Join-Path -Path $oemPath -ChildPath "backgroundDefault.jpg") -Force -WhatIf:$WhatIfPreference
 }

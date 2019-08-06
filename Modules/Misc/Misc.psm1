@@ -3,7 +3,7 @@
    Creates a random password
 .DESCRIPTION
    Creates a password with 16 characters or random numbers and letters.
-   Can be configured to create a complex password also containing special characters. 
+   Can be configured to create a complex password also containing special characters.
 .EXAMPLE
    Get-Password
 
@@ -47,9 +47,9 @@ function Get-Password() {
     }
 
     if ($Complex) {
-        $char += 33..47 | ForEach-Object { [char]$_ } 
-        $char += 58..64 | ForEach-Object { [char]$_ } 
-        $char += 91..96 | ForEach-Object { [char]$_ } 
+        $char += 33..47 | ForEach-Object { [char]$_ }
+        $char += 58..64 | ForEach-Object { [char]$_ }
+        $char += 91..96 | ForEach-Object { [char]$_ }
         $char += 123..126 | ForEach-Object { [char]$_ }
     }
 
@@ -83,13 +83,13 @@ function Get-Password() {
    Suspends execution of the screen server and time lock
 .DESCRIPTION
    When executed, starts a loop which sends a a keystroke to the session to prevent the screensaver
-   from starting as well as session locks and other triggers based on inactive time. 
+   from starting as well as session locks and other triggers based on inactive time.
    Default loop delay is 60 seconds.
 
-   The loop continues until the execution is interrupted, i.e. using Ctrl+C or closing the PowerShell window, 
+   The loop continues until the execution is interrupted, i.e. using Ctrl+C or closing the PowerShell window,
    or until the timeout period expires, if specified.
 
-   Uses the VBScript SendKeys method to send the interrupting key. See link for details. 
+   Uses the VBScript SendKeys method to send the interrupting key. See link for details.
 .EXAMPLE
    Suspend-ScreenSaver
 
@@ -152,7 +152,7 @@ function Suspend-ScreenSaver {
         while ($true) {
             Write-Verbose "Sleeping for $Delay seconds"
             Start-Sleep -Seconds $Delay
-            
+
             $wScriptShell.SendKeys($Key)
             Write-Verbose "Sent $Key"
 

@@ -2,8 +2,8 @@
 .SYNOPSIS
     Uninstalls installed PowerShell modules where newer versions exist.
 .DESCRIPTION
-    Parses the list of installed modules on the local computer. 
-    If a module has several versions installed, the older versions are uninstalled, leaving only the newest version. 
+    Parses the list of installed modules on the local computer.
+    If a module has several versions installed, the older versions are uninstalled, leaving only the newest version.
     System modules, modules installed in C:\Windows\system32\WindowsPowerShell\v1.0\Modules, are ignored.
 .EXAMPLE
     .\Uninstall-DeprecatedModule.ps1
@@ -35,17 +35,17 @@ begin {
     $duplicateModuleGroup = Get-Module -Name $Name -ListAvailable -ErrorAction Stop -Verbose:$false | Where-Object Path -NotLike "C:\Windows\system32\*" | Group-Object -Property Name | Where-Object -Property Count -GT 1
     if (($duplicateModuleGroup | Measure-Object).Count -gt 0) {
         Write-Verbose "Modules with old versions: $(($duplicateModuleGroup.Group | Select-Object -ExpandProperty Name -Unique) -join ", ")"
-    } 
+    }
     else {
         Write-Verbose "No modules with duplicate versions found"
     }
 }
-    
+
 process {
     foreach ($moduleGroup in $duplicateModuleGroup) {
         Write-Verbose "Processing module: $($moduleGroup.Name)"
         $duplicateVersions = $moduleGroup.Group | Group-Object -Property version | Where-Object Count -gt 1
-        
+
         if ($duplicateVersions) {
             $moduleName = $duplicateVersions.Group | Select-Object -ExpandProperty Name -Unique
             $versions = $duplicateVersions.Group | Select-Object -Property Version, Path

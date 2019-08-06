@@ -1,32 +1,32 @@
 ﻿<#
 .Synopsis
-   Compare folders in homedir to actual users in AD. 
+   Compare folders in homedir to actual users in AD.
 .DESCRIPTION
-   Traverses a homedir folder and checks Active Directory for any user with the same name. 
+   Traverses a homedir folder and checks Active Directory for any user with the same name.
 
-   Can also check if a user has access to his home folder and if not, provide "Full Control" access. 
+   Can also check if a user has access to his home folder and if not, provide "Full Control" access.
 .EXAMPLE
    .\Compare-HomeDirsToUser.ps1 -LDAPPath "LDAP://OU=Users,DC=domain,DC=local" -HomeDirectory "C:\Users"
 
-   Parse home folder and list all folders for which a user does not exist. 
+   Parse home folder and list all folders for which a user does not exist.
 .EXAMPLE
    .\Compare-HomeDirsToUser.ps1 -LDAPPath "LDAP://OU=Users,DC=domain,DC=local" -HomeDirectory "C:\Users" -CheckFullControl
-   
+
    Parse home folder and list all folders for which a user does not exist as well as folders where the corresponding user does not have full access control.
 .EXAMPLE
    .\Compare-HomeDirsToUser.ps1 -LDAPPath "LDAP://OU=Users,DC=domain,DC=local" -HomeDirectory "C:\Users" -GiveFullControl
 
    Parse home folder, list all folders for which a user does not exist as well as folders where the corresponding user does not have full access control.
-   If the user does not have full access control, grant it.  
+   If the user does not have full access control, grant it.
 .INPUTS
    System.String
 .OUTPUTS
    System.Management.Automation.PSCustomObject
 .NOTES
-   This function does not take pipeline input. 
+   This function does not take pipeline input.
 #>
 
-[CmdletBinding(SupportsShouldProcess=$true, 
+[CmdletBinding(SupportsShouldProcess=$true,
                 PositionalBinding=$false,
                 ConfirmImpact='Medium')]
 [OutputType([System.Management.Automation.PSCustomObject])]
@@ -71,7 +71,7 @@ Begin
         }
 
         $DomainLabel = $Matches[1].ToUpper()
-    } 
+    }
 
     $domain = New-Object System.DirectoryServices.DirectoryEntry($LDAPPath)
     $searcher = New-Object System.DirectoryServices.DirectorySearcher($domain)
@@ -97,7 +97,7 @@ Process
 
     Write-Progress -Activity "Getting home folders..." -PercentComplete 0
 
-    $homeFolders = Get-ChildItem $HomeDirectory | Where-Object { $_.PSIsContainer } 
+    $homeFolders = Get-ChildItem $HomeDirectory | Where-Object { $_.PSIsContainer }
 
     for ($i = 0; $i -lt $homeFolders.Count; $i++) {
         $userName = $homeFolders[$i].Name
@@ -121,7 +121,7 @@ Process
                 Write-Progress -Activity "Iterating home folders..." -Status "Processing $userName" -CurrentOperation "Checking user access to folder" -PercentComplete ($i / $homeFolders.Count * 100)
                 Write-Verbose "Checking full access control for user $userName..."
                 $acl = (Get-Item $homeFolders[$i].FullName).GetAccessControl("Access")
-                
+
                 $access = $acl.Access | Where-Object { $_.IdentityReference.Value -eq "$DomainLabel\$userName" }
 
                 if ($access.FileSystemRights -ne [System.Security.AccessControl.FileSystemRights]::FullControl) {
@@ -133,17 +133,17 @@ Process
                         Write-Verbose "Giving user $userName full access to folder..."
 
                         $inheritance = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit, [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
-                        $propagation = [System.Security.AccessControl.PropagationFlags]::None 
+                        $propagation = [System.Security.AccessControl.PropagationFlags]::None
                         $rights = [System.Security.AccessControl.FileSystemRights]::FullControl
-                        $type = [System.Security.AccessControl.AccessControlType]::Allow 
-                        $user = New-Object System.Security.Principal.NTAccount("$DomainLabel\$userName") 
+                        $type = [System.Security.AccessControl.AccessControlType]::Allow
+                        $user = New-Object System.Security.Principal.NTAccount("$DomainLabel\$userName")
 
                         $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($user, $rights, $inheritance, $propagation, $type)
                         $acl.SetAccessRule($rule)
-                        
+
                         if ($pscmdlet.ShouldProcess($homeFolders[$i].FullName, "Give $userName Full Control")) {
                             Set-Acl -Path $homeFolders[$i].FullName -AclObject $acl -ErrorVariable aclError
-                            
+
                             if (-not $aclError) {
                                 Write-Verbose "User $userName was given full access to folder."
                                 $homeFolderCheck.UserHasFullAccess = $true

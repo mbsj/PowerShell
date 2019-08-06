@@ -2,30 +2,30 @@
 
 <#
 .SYNOPSIS
-    Tests the connection to the RPC endpoint mapper as well as all registered endpoints. 
+    Tests the connection to the RPC endpoint mapper as well as all registered endpoints.
 .DESCRIPTION
-    Queries the RPC endpoint mapper on port 135. If connection is successful and registered endpoints are reported, each endpoint is also tested for connectivity. 
+    Queries the RPC endpoint mapper on port 135. If connection is successful and registered endpoints are reported, each endpoint is also tested for connectivity.
 .EXAMPLE
     .\Test-RPC.ps1 -ComputerName "server1","server2","server3"
     Tests connection to RPC port ranges on the three servers
 .EXAMPLE
     .\Test-RPC.ps1 -ComputerName "server1" | Select-Object -ExpandProperty DynamicPorts
-    Tests connection to the RPC ports ranges and, assuming that the connection to the endpoint mapper is successful, lists which dynamic ports are available. 
+    Tests connection to the RPC ports ranges and, assuming that the connection to the endpoint mapper is successful, lists which dynamic ports are available.
 .EXAMPLE
     $testResults = .\Test-RPC.ps1 -ComputerName "server1","server2","server3"
     foreach ($r in $testResults) {
         $r.DynamicPorts | Select-object -Property @{Name = "ComputerName"; Expression={$r.ComputerName}}, Port, Open | Export-Csv ".\RPCPortTest.csv" -Append
     }
 
-    Tests RPC connection to the three selected servers and gathers the results in the $testResults variable. 
+    Tests RPC connection to the three selected servers and gathers the results in the $testResults variable.
     Then, iterates over the results and creates a line for each tested port on each server with computername, port number and open value and exports it to a CSV file in the current folder.
 .INPUTS
     String array with computer names.
 .OUTPUTS
-    PSObject with three properties: 
+    PSObject with three properties:
         ComputerName -> String with the name of the computer for which the port tests were made
         EndpointMapperOpen -> Boolean with value indicating wether the endpoint mapper war available
-        DynamicPorts -> Array of PSObjects, one for each port tested. If the endpoint mapper is not available this array will be empty. Each object will have two properties: 
+        DynamicPorts -> Array of PSObjects, one for each port tested. If the endpoint mapper is not available this array will be empty. Each object will have two properties:
             Port -> Int with the port number
             Open -> Boolean with value indicating wether the port can be opened or not
 
@@ -42,7 +42,7 @@ Param (
     [ValidateNotNullOrEmpty()]
     [String[]]$ComputerName
 )
-    
+
 begin {
     $rpcClass = @'
 using System;
@@ -87,16 +87,16 @@ public class Rpc
     public static List<int> QueryEPM(string host)
     {
         List<int> ports = new List<int>();
-        int retCode = 0; // RPC_S_OK                
+        int retCode = 0; // RPC_S_OK
         IntPtr bindingHandle = IntPtr.Zero;
-        IntPtr inquiryContext = IntPtr.Zero;                
+        IntPtr inquiryContext = IntPtr.Zero;
         IntPtr elementBindingHandle = IntPtr.Zero;
         RPC_IF_ID elementIfId;
         Guid elementUuid;
         IntPtr elementAnnotation;
 
         try
-        {                    
+        {
             retCode = RpcBindingFromStringBinding("ncacn_ip_tcp:" + host, out bindingHandle);
             if (retCode != 0)
                 throw new Exception("RpcBindingFromStringBinding: " + retCode);
@@ -104,7 +104,7 @@ public class Rpc
             retCode = RpcMgmtEpEltInqBegin(bindingHandle, 0, 0, 0, string.Empty, out inquiryContext);
             if (retCode != 0)
                 throw new Exception("RpcMgmtEpEltInqBegin: " + retCode);
-            
+
             do
             {
                 IntPtr bindString = IntPtr.Zero;
@@ -116,13 +116,13 @@ public class Rpc
                 retCode = RpcBindingToStringBinding(elementBindingHandle, out bindString);
                 if (retCode != 0)
                     throw new Exception("RpcBindingToStringBinding: " + retCode);
-                    
+
                 string s = Marshal.PtrToStringAuto(bindString).Trim().ToLower();
-                if(s.StartsWith("ncacn_ip_tcp:"))                        
+                if(s.StartsWith("ncacn_ip_tcp:"))
                     ports.Add(int.Parse(s.Split('[')[1].Split(']')[0]));
-                
+
                 RpcBindingFree(ref elementBindingHandle);
-                
+
             }
             while (retCode != 1772); // RPC_X_NO_MORE_ENTRIES
 
@@ -136,7 +136,7 @@ public class Rpc
         {
             RpcBindingFree(ref bindingHandle);
         }
-        
+
         return ports;
     }
 }
@@ -144,7 +144,7 @@ public class Rpc
 
     Add-Type $rpcClass
 }
-    
+
 process {
     foreach ($computer in $ComputerName) {
         Write-Verbose "Testing connection to RPC ports on $computer"
@@ -166,7 +166,7 @@ process {
             else {
                 Write-Warning "Endpoint mapper (135) not available"
             }
-            
+
             $socket.Close()
         }
         catch {
@@ -191,10 +191,10 @@ process {
 
                     $open = $false
                     $socket = New-Object Net.Sockets.TcpClient
-                    
+
                     try {
                         $ErrorActionPreference = "Stop"
-                        $socket.Connect($computer, $port) 
+                        $socket.Connect($computer, $port)
                         if ($socket.Connected) {
                             $open = $true
                         }
@@ -221,7 +221,7 @@ process {
                 $rpcPortTest = New-Object -TypeName psobject
                 $rpcPortTest | Add-Member -MemberType NoteProperty -Name "Port" -Value ([int]$job.Name)
                 $rpcPortTest | Add-Member -MemberType NoteProperty -Name "Open" -Value ($job | Receive-Job)
-                
+
                 $job | Remove-Job
 
                 $rpcTest.DynamicPorts += $rpcPortTest
@@ -234,6 +234,6 @@ process {
         $rpcTest
     }
 }
-    
+
 end {
 }

@@ -26,11 +26,11 @@ param(
 )
 
 process {
-    Get-CimInstance -ClassName Win32_Volume -ComputerName $ComputerName -Filter 'DriveType = 3 AND DriveLetter != NULL' | 
-        Select-Object SystemName, 
-                      DriveLetter, 
+    Get-CimInstance -ClassName Win32_Volume -ComputerName $ComputerName -Filter 'DriveType = 3 AND DriveLetter != NULL' |
+        Select-Object SystemName,
+                      DriveLetter,
                       Label,
-                      @{Name = "Capacity"; Expression = {$_.Capacity / 1GB}}, 
-                      @{Name = 'FreePercent'; Expression = {($_.FreeSpace / $_.Capacity) * 100} }, 
+                      @{Name = "Capacity"; Expression = {$_.Capacity / 1GB}},
+                      @{Name = 'FreePercent'; Expression = {($_.FreeSpace / $_.Capacity) * 100} },
                       @{Name = 'FreeSpace'; Expression = {($_.FreeSpace / 1GB)} }
 }

@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    Gets any users and groups as well as their access rights on a given file or folder. 
+    Gets any users and groups as well as their access rights on a given file or folder.
 .DESCRIPTION
-    Checks the file or folder access control lists and returns an object for each user, describing their access. 
-    This returns objects for both users and groups. 
-    The switch -ResolveGroups will make the script resolve any groups, and get the users in them. If groups contains groups, they will be resolved recursively. 
+    Checks the file or folder access control lists and returns an object for each user, describing their access.
+    This returns objects for both users and groups.
+    The switch -ResolveGroups will make the script resolve any groups, and get the users in them. If groups contains groups, they will be resolved recursively.
     The -AccountType parameter can be used to limit the access check to either local or domain users or both. Default is Domain.
 .EXAMPLE
     .\Get-AccessRights.ps1 -Path C:\Temp
@@ -13,21 +13,21 @@
 .EXAMPLE
     .\Get-AccessRights.ps1 -Path C:\Temp -ResolveGroups | Select-Object -Property UserName,AccessControlType,FileSystemRights
 
-    Gets the access right for the path C:\Temp, resolving any and all groups in the process. 
-    Output is limited to only the user names, access control types and associated rights. 
-    This could then be pipet to i.e. Out-File to save a text file. 
+    Gets the access right for the path C:\Temp, resolving any and all groups in the process.
+    Output is limited to only the user names, access control types and associated rights.
+    This could then be pipet to i.e. Out-File to save a text file.
 .EXAMPLE
     .\Get-AccessRights.ps1 -Path C:\Temp -ResolveGroups -AccountType Local
-    
-    Gets the access rights for the path C:\Temp, resolving any and all groups on the process. 
-    Also limits the check to only handle local user accounts, ignoring domain accounts. 
+
+    Gets the access rights for the path C:\Temp, resolving any and all groups on the process.
+    Also limits the check to only handle local user accounts, ignoring domain accounts.
 .EXAMPLE
     $paths = @(".\File1","C:\Temp")
     PS C:\>$paths | .\Get-AccessRights.ps1
 
     Gets the access rights for the paths specified in $paths.
 .NOTES
-    Be aware that if a local group contains domain groups of users, this will not be resolved. 
+    Be aware that if a local group contains domain groups of users, this will not be resolved.
     This will be fixed at a later date.
 #>
 [CmdletBinding(SupportsShouldProcess=$false, ConfirmImpact='Medium', HelpUri = "mailto:mvj@kmd.dk")]
@@ -55,7 +55,7 @@ begin {
             [ValidateNotNull()]
             [adsi]$Group
         )
-        
+
         if ($handledGroups -notcontains $Group.Path) {
             Write-Verbose "Getting members for group $($Group.Name)"
             foreach ($member in $Group.Properties["member"]) {
@@ -144,7 +144,7 @@ process {
                 $groupMembers = Get-LocalGroupMember -Group $localEntry
                 Write-Verbose "Adding local entries for $(($groupMembers | Measure-Object).Count) group members"
                 $localEntries += $groupMembers | Select-Object -Property $localEntryProperties
-            } 
+            }
         }
     }
 }
@@ -158,17 +158,17 @@ end {
                                                 @{Name="DisplayName"; Expression={$_.DisplayName}},
                                                 @{Name="AccessControlType"; Expression={$_.Access.AccessControlType}},
                                                 @{Name="FileSystemRights"; Expression={$_.Access.FileSystemRights}}
-                                                
+
     $userACL += $localEntries | Select-Object -Property @{Name="Path"; Expression={$_.WinPath}},
                                             @{Name="Domain"; Expression={$env:COMPUTERNAME}},
                                             @{Name="UserName"; Expression={$_.Name}},
                                             @{Name="DisplayName"; Expression={""}},
                                             @{Name="AccessControlType"; Expression={$_.Access.AccessControlType}},
                                             @{Name="FileSystemRights"; Expression={$_.Access.FileSystemRights}}
-    
+
     $userACL | ForEach-Object {
         if (-not ($_.UserName)) {
-            $_.UserName = "SYSTEM" 
+            $_.UserName = "SYSTEM"
         }
     }
 

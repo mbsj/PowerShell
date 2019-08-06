@@ -55,7 +55,7 @@ InModuleScope AD {
                     Enabled = $true
                     lastLogonTimeStamp = (Get-Date).AddDays(-700).ToFileTime()
                     whenCreated = (Get-Date).AddDays(-800)
-                }, 
+                },
                 @{
                     Name = "AdminEnabled4"
                     SamAccountName = "EnaAdmin4"
@@ -104,14 +104,14 @@ InModuleScope AD {
                 $users | Where-Object { $_.lastLogonTimeStamp } | ForEach-Object {
                     $fileTime = $_ | Select-Object -ExpandProperty lastLogonTimeStamp $lastLogonFileTime
                     [DateTime]::FromFileTime($fileTime) | Should BeLessThan (Get-Date).AddYears(-1)
-                } 
+                }
             }
 
             It "Users without last logon time should have create time be older than 1 year" {
-               
+
                 $users | Where-Object { -not $_.lastLogonTimeStamp } | ForEach-Object {
                     $_.whenCreatedTime | Should BeLessThan (Get-Date).AddYears(-1)
-                } 
+                }
             }
         }
 
@@ -136,13 +136,13 @@ InModuleScope AD {
                 $users | Where-Object { $_.lastLogonTimeStamp } | ForEach-Object {
                     $fileTime = $_ | Select-Object -ExpandProperty lastLogonTimeStamp $lastLogonFileTime
                     [DateTime]::FromFileTime($fileTime) | Should BeLessThan $maxAge
-                } 
+                }
             }
 
             It "Users without last logon time should have create time be older than 30 days" {
                 $users | Where-Object { -not $_.lastLogonTimeStamp } | ForEach-Object {
                     $_.whenCreatedTime | Should BeLessThan $maxAge
-                } 
+                }
             }
         }
 

@@ -2,15 +2,15 @@
 .SYNOPSIS
     Gets the uptime for the current machine or a selected remote machine.
 .DESCRIPTION
-    Uses CIM to get the last boot time of the selected machine. Based on that, calculates the total uptime. 
+    Uses CIM to get the last boot time of the selected machine. Based on that, calculates the total uptime.
 .EXAMPLE
     .\Get-ComputerUpTime.ps1
     Returns the up time for the local computer.
 .EXAMPLE
     .\Get-ComputerUpTime.ps1 -ComputerName "Server01","Server02","Server03"
-    Returns the up time for the three selected servers. 
+    Returns the up time for the three selected servers.
 .INPUTS
-    Optional strings with computer names. 
+    Optional strings with computer names.
 .OUTPUTS
     Objects with the property ComputerName and Uptime
 #>

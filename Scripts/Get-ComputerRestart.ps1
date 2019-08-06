@@ -1,15 +1,15 @@
 <#
 .SYNOPSIS
-    Returns the date and times as well as type of restart for servers. 
+    Returns the date and times as well as type of restart for servers.
 .DESCRIPTION
-    Checks the windows event logs on the server and looks for both soft and hard reboots. 
+    Checks the windows event logs on the server and looks for both soft and hard reboots.
     By default checks locally but can check remote servers with the ComputerName parameter.
     Will check the entire event log. If MaxAge is specified, the query will be limited to that time. This can also limit the execution time when querying a big event log.
 .EXAMPLE
     .\Get-ComputerRestart.ps1
-    Returns all restart events for the local computer. 
+    Returns all restart events for the local computer.
 .EXAMPLE
-    .\Get-ComputerRestart.ps1 -ComputerName FileServer01 
+    .\Get-ComputerRestart.ps1 -ComputerName FileServer01
     Returns all restart events for the remote computer named FileServer01.
 .EXAMPLE
     .\Get-ComputerRestart.ps1 -MaxAge (Get-Date).AddDays(-7)
@@ -39,12 +39,12 @@ begin {
     $session = $null
 
     $query = @"
-SELECT 
-    * 
-FROM 
-    Win32_NTLogEvent 
-WHERE 
-    LogFile = 'System' AND 
+SELECT
+    *
+FROM
+    Win32_NTLogEvent
+WHERE
+    LogFile = 'System' AND
     (EventCode = 6008 OR EventCode = 1074)
 "@
 
@@ -80,16 +80,16 @@ process {
 
         switch ($event.EventCode) {
             1074 {
-                $previous = $restartEvents | Where-Object { 
+                $previous = $restartEvents | Where-Object {
                     $_.DateTime -gt $event.TimeGenerated.AddMinutes(-1) -and $_.EventId -eq $event.EventCode -and $_.ComputerName -eq $event.ComputerName
                 }
-                    
+
                 if ($previous) {
                     continue
                 }
 
                 $restartEvent.Type = ($event.Message | Select-String -Pattern "Shutdown Type: (.*)").Matches.Groups[1].Value.Trim()
-                
+
                 $process = "Restarted by process: " + ($event.Message | Select-String -Pattern "The process (.*)\shas initiated").Matches.Groups[1].Value.Trim()
                 $message = "$process`r`nRestarted by user: " + ($event.Message | Select-String -Pattern "on behalf of user (\S*)").Matches.Groups[1].Value.Trim()
                 $comment = ($event.Message | Select-String -Pattern "Comment: (.*)").Matches.Groups[1].Value.Trim()
@@ -98,13 +98,13 @@ process {
                     $message += "`r`nUser comment: $comment"
                 }
                 $restartEvent.Message = $message
-                    
+
                 $restartEvents += $restartEvent
             }
             6008 {
                 $restartEvent.Type = "Unexpected"
                 $restartEvent.Message = $event.Message
-                    
+
                 $restartEvents += $restartEvent
             }
             default {
