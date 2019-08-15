@@ -27,7 +27,7 @@
     $missingHotfixesFormatted = $missingHotfixes.GetEnumerator() | Select-Object -Property Key,@{Name="Count";Expression={$_.Value.Count}},@{Name="IDs";Expression={$_.Value -join ", "}}
     $missingHotfixesFormatted | Export-Csv -Delimiter ";" -Path ([Environment]::GetFolderPath("Desktop") + "\Hotfixes.csv")
 
-    Takes the list of missing hotfixes and formats it with three colums; one with computer names, one with total missing hotfix count and lastly a column with the missing hotfix IDs.
+    Takes the list of missing hotfixes and formats it with three column; one with computer names, one with total missing hotfix count and lastly a column with the missing hotfix IDs.
     Then exports as CSV which can be imported in i.e. excel.
 .EXAMPLE
     $baseline = Get-HotFix -ComputerName "server1" | Select-Object -ExpandProperty HotFixID
