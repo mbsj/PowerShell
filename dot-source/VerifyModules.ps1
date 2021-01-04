@@ -5,11 +5,13 @@ param (
 Write-Verbose "Verifying modules are installed..."
 
 $modules = @(
-    "PSReadLine",
+    #"PSReadLine",
     "PSScriptAnalyzer",
     "xPSDesiredStateConfiguration",
     "xDSCResourceDesigner",
-    "Pester"
+    "Pester",
+    "posh-git",
+    "oh-my-posh"
 )
 
 Write-Verbose "The following modules are expected:"
