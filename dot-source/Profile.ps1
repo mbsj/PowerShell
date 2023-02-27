@@ -17,10 +17,14 @@ $modulesToImport = @(
 )
 
 $modulesToImport | ForEach-Object {
-    Import-Module -Name $_
+    if (Get-Module -ListAvailable $_) {
+        Import-Module -Name $_
+    }
 }
 
-Set-Theme Agnoster
+if (Get-Module -ListAvailable "oh-my-posh") {
+    Set-PoshPrompt Agnoster
+}
 
 if (Get-Module -ListAvailable "PowerShellCookbook") {
     Import-Module PowerShellCookbook -Prefix "Cookbook"
