@@ -68,7 +68,7 @@ function Invoke-SQL {
     Begin {
         $connectionString = switch ($pscmdlet.ParameterSetName) {
             "Trusted Connection" { "Server=$Server;Database=$Database;Trusted_Connection=True;" }
-            "Standard Security" { "Server=$Server;Database=$Database;User Id=$Username;Password=$Password;" }
+            "Standard Security" { "Server=$Server;Database=$Database;User Id=$Username;Password=$PlainTextPassword;" }
             default { throw "Unable to determine ParameterSetName" }
         }
 
