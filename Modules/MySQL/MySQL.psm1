@@ -43,7 +43,7 @@ function Invoke-MySQL {
 
         # Timeout for the query
         [Parameter()]
-        [ValidateScript( {$_ -gt 0})]
+        [ValidateScript( { $_ -gt 0 })]
         [Int]$Timeout = 10,
 
         # Username used to authenticate with the server
@@ -61,12 +61,13 @@ function Invoke-MySQL {
         }
 
         $connection = New-Object MySql.Data.MySqlClient.MySqlConnection
-        $connection.ConnectionString = "Server=$Server;Uid=$Username;Pwd=$PlainTextPassword;database=$Database;"
+        $connection.ConnectionString = "Server=$Server;Uid=$Username;Pwd=$PlainTextPassword;database=$Database;Connection Timeout=$Timeout"
 
         if ($pscmdlet.ShouldProcess("$Server\$Database", "Open connection")) {
             try {
-            $connection.Open()
-            } catch {
+                $connection.Open()
+            }
+            catch {
                 throw $_
             }
         }
