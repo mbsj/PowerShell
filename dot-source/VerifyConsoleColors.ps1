@@ -28,15 +28,16 @@ $missingColors = @{ }
 
 $currentColors = Get-ItemProperty -Path $consoleReg -Name ([array]$vsCodeDarkColors.Keys)
 
-$vsCodeDarkColors.GetEnumerator() | ForEach-Object {
-    if ($currentColors.($_.Key) -ne $_.Value) {
-        $missingColors += @{$_.Key = $_.Value }
-    }
-}
+# Disabled verification check
+# $vsCodeDarkColors.GetEnumerator() | ForEach-Object {
+#     if ($currentColors.($_.Key) -ne $_.Value) {
+#         $missingColors += @{$_.Key = $_.Value }
+#     }
+# }
 
-if ($missingColors.Count -gt 0) {
-    Write-Warning "Console color scheme is not applied or only partially applied. Use function `"Set-ConsoleColor`" to apply the color scheme or `"Get-ConsoleColor`" to view the status or each color setting."
-}
+# if ($missingColors.Count -gt 0) {
+#     Write-Warning "Console color scheme is not applied or only partially applied. Use function `"Set-ConsoleColor`" to apply the color scheme or `"Get-ConsoleColor`" to view the status or each color setting."
+# }
 
 <#
 .SYNOPSIS
