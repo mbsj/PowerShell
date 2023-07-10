@@ -6,11 +6,9 @@ Write-Verbose "Verifying fonts are installed..."
 $fontFilesPathRoot = Join-Path -Path $env:OneDriveConsumer -ChildPath "Technical\FiraCode_1.207\ttf"
 
 $requiredFonts = @{
-    "Fira Code Bold (TrueType)"    = "FiraCode-Bold.ttf";
-    "Fira Code Medium (TrueType)"  = "FiraCode-Medium.ttf";
-    "Fira Code Retina (TrueType)"  = "FiraCode-Retina.ttf";
-    "Fira Code Light (TrueType)"   = "FiraCode-Light.ttf";
-    "Fira Code Regular (TrueType)" = "FiraCode-Regular.ttf"
+    "FiraMono Nerd Font Mono Bold (TrueType)"    = "FiraMonoNerdFontMono-Bold.otf";
+    "FiraMono Nerd Font Mono Medium (TrueType)"  = "FiraMonoNerdFontMono-Medium.otf";
+    "FiraMono Nerd Font Mono Regular (TrueType)"  = "FiraMonoNerdFontMono-Regular.otf"
 }
 
 Write-Verbose "The following fonts are expected to be installed:"
